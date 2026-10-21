@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#171717">
+  <title>ZALMEX | متجر إلكتروني</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,sans-serif;background:#f7f7f7;color:#202020}
+    header{background:#171717;color:white;padding:18px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .logo{font-size:27px;font-weight:900;color:#ffd447;letter-spacing:2px}
+    button{cursor:pointer;border:0;border-radius:9px;padding:12px 16px;font-weight:bold}
+    .cart{background:#ffd447;color:#171717}
+    .hero{background:linear-gradient(135deg,#202020,#454545);color:white;text-align:center;padding:48px 18px}
+    .hero h1{font-size:34px;margin:0 0 12px}
+    .hero p{color:#eee;line-height:1.8}
+    .hero strong{color:#ffd447}
+    main{max-width:1100px;margin:auto;padding:25px 16px}
+    .tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+    input,select,textarea{width:100%;padding:13px;border:1px solid #ddd;border-radius:8px;font-size:16px;background:white}
+    .tools input{flex:1;min-width:180px}
+    .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:15px}
+    .product{background:white;border-radius:14px;padding:15px;box-shadow:0 3px 12px #0000000d}
+    .picture{height:125px;background:#fff3bd;border-radius:10px;display:grid;place-items:center;font-size:55px}
+    .product h3{font-size:17px}
+    .price{font-size:19px;font-weight:bold;color:#bd7900}
+    .add{width:100%;background:#171717;color:white;margin-top:8px}
+    .section{background:white;padding:20px;border-radius:14px;margin-top:28px}
+    .section h2{margin-top:0}
+    .formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .formgrid .full{grid-column:1/-1}
+    .primary{background:#ffd447;color:#171717;width:100%;margin-top:14px;font-size:16px}
+    .muted{font-size:13px;color:#666;line-height:1.7}
+    footer{background:#171717;color:#eee;text-align:center;padding:25px;margin-top:35px;line-height:1.8}
+    #cartItems p{border-bottom:1px solid #eee;padding:8px 0}
+    @media(max-width:500px){.hero h1{font-size:28px}.formgrid{grid-template-columns:1fr}.formgrid .full{grid-column:auto}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo">ZALMEX</div>
+  <button class="cart" onclick="document.getElementById('cartSection').scrollIntoView({behavior:'smooth'})">
+    🛒 السلة (<span id="count">0</span>)
+  </button>
+</header>
+
+<section class="hero">
+  <h1>مرحبًا بك في <strong>ZALMEX</strong></h1>
+  <p>اكتشف منتجاتنا واختر ما يناسبك<br>تسوّق بسهولة والدفع عند الاستلام</p>
+  <button class="cart" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">اكتشف المنتجات</button>
+</section>
+
+<main>
+  <h2 id="shop">🛍️ منتجاتنا</h2>
+  <div class="tools">
+    <input id="search" placeholder="ابحث عن منتج..." oninput="renderProducts()">
+    <select id="category" onchange="renderProducts()">
+      <option value="">كل التصنيفات</option>
+      <option value="إكسسوارات">إكسسوارات</option>
+      <option value="منزل">المنزل</option>
+      <option value="أخرى">أخرى</option>
+    </select>
+  </div>
+  <div id="products" class="products"></div>
+
+  <section class="section" id="cartSection">
+    <h2>🛒 سلة المشتريات</h2>
+    <div id="cartItems">السلة فارغة حاليًا.</div>
+    <h3>المجموع: <span id="total">0</span> دج</h3>
+    <p class="muted">سعر التوصيل يُحدّد بعد إعداد أسعار الولايات.</p>
+  </section>
+
+  <section class="section">
+    <h2>📦 معلومات الطلب</h2>
+    <form id="orderForm">
+      <div class="formgrid">
+        <input class="full" name="name" placeholder="الاسم واللقب" required>
+        <input name="phone" type="tel" placeholder="رقم الهاتف" required>
+        <input name="wilaya" placeholder="الولاية" required>
+        <input name="municipality" placeholder="البلدية" required>
+        <input class="full" name="address" placeholder="العنوان بالتفصيل" required>
+      </div>
+      <p class="muted">الدفع نقدًا عند استلام الطلب.</p>
+      <button class="primary" type="submit">تأكيد الطلب</button>
+    </form>
+    <p id="message" class="muted"></p>
+  </section>
+</main>
+
+<footer>
+  <div class="logo">ZALMEX</div>
+  متجر إلكتروني مستقل<br>
+  الدفع عند الاستلام · الجزائر
+</footer>
+
+<script>
+const products = [
+  {id:1,name:"ساعة أنيقة",category:"إكسسوارات",price:350,emoji:"⌚"},
+  {id:2,name:"سوار أنيق",category:"إكسسوارات",price:200,emoji:"📿"},
+  {id:3,name:"إكسسوار مميز",category:"إكسسوارات",price:250,emoji:"💍"},
+  {id:4,name:"منتج للمنزل",category:"منزل",price:500,emoji:"🏠"},
+  {id:5,name:"هدية مميزة",category:"أخرى",price:300,emoji:"🎁"},
+  {id:6,name:"منتج جديد",category:"أخرى",price:400,emoji:"✨"}
+];
+let cart = [];
+
+function renderProducts(){
+  const q = document.getElementById("search").value.trim().toLowerCase();
+  const c = document.getElementById("category").value;
+  const filtered = products.filter(p =>
+    p.name.toLowerCase().includes(q) && (!c || p.category===c)
+  );
+  document.getElementById("products").innerHTML = filtered.map(p=>`
+    <article class="product">
+      <div class="picture">${p.emoji}</div>
+      <h3>${p.name}</h3>
+      <p class="muted">${p.category}</p>
+      <div class="price">${p.price} دج</div>
+      <button class="add" onclick="addToCart(${p.id})">أضف إلى السلة</button>
+    </article>`).join("") || "<p>لا توجد منتجات مطابقة.</p>";
+}
+function addToCart(id){
+  const item = cart.find(p=>p.id===id);
+  if(item) item.qty++;
+  else cart.push({...products.find(p=>p.id===id),qty:1});
+  renderCart();
+}
+function renderCart(){
+  document.getElementById("count").textContent = cart.reduce((s,p)=>s+p.qty,0);
+  document.getElementById("cartItems").innerHTML = cart.length ? cart.map(p=>`
+    <p>${p.name} × ${p.qty} — ${p.price*p.qty} دج
+    <button onclick="removeItem(${p.id})">حذف</button></p>`).join("") : "السلة فارغة حاليًا.";
+  document.getElementById("total").textContent = cart.reduce((s,p)=>s+p.price*p.qty,0);
+}
+function removeItem(id){
+  cart=cart.filter(p=>p.id!==id);
+  renderCart();
+}
+document.getElementById("orderForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  if(!cart.length){
+    document.getElementById("message").textContent="أضف منتجًا إلى السلة أولًا.";
+    return;
+  }
+  document.getElementById("message").textContent=
+    "هذه نسخة تجريبية للواجهة فقط. لم يُحفظ الطلب بعد. سنربط قاعدة البيانات قبل استقبال طلبات حقيقية.";
+});
+renderProducts();
+</script>
+</body>
+</html>
