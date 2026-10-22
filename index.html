@@ -99,14 +99,7 @@
   const SUPABASE_URL = "https://jblehthxfyeseqbzhijy.supabase.co";
 const SUPABASE_KEY = "sb_publishable_6JRg31NgFFiry4ah_qxBvw_9ffoph9s";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-const products = [
-  {id:1,name:"ساعة أنيقة",category:"إكسسوارات",price:350,emoji:"⌚"},
-  {id:2,name:"سوار أنيق",category:"إكسسوارات",price:200,emoji:"📿"},
-  {id:3,name:"إكسسوار مميز",category:"إكسسوارات",price:250,emoji:"💍"},
-  {id:4,name:"منتج للمنزل",category:"منزل",price:500,emoji:"🏠"},
-  {id:5,name:"هدية مميزة",category:"أخرى",price:300,emoji:"🎁"},
-  {id:6,name:"منتج جديد",category:"أخرى",price:400,emoji:"✨"}
-];
+  let products = [];
 let cart = [];
 
 function renderProducts(){
