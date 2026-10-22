@@ -101,6 +101,28 @@ const SUPABASE_KEY = "sb_publishable_6JRg31NgFFiry4ah_qxBvw_9ffoph9s";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   let products = [];
 let cart = [];
+  async function loadProducts() {
+  const { data, error } = await supabaseClient
+    .from("products")
+    .select("*")
+    .eq("is_active", true);
+
+  if (error) {
+    console.error("خطأ في جلب المنتجات:", error);
+    return;
+  }
+
+    products = data.map(p => ({
+  id: p.id,
+  name: p.name_ar || p.name_fr || "منتج",
+  category: "أخرى",
+  price: Number(p.price) || 0,
+  emoji: "🛍️",
+  image: p.image_url
+}));
+
+  renderProducts();
+}
 
 function renderProducts(){
   const q = document.getElementById("search").value.trim().toLowerCase();
@@ -143,7 +165,7 @@ document.getElementById("orderForm").addEventListener("submit",function(e){
   document.getElementById("message").textContent=
     "هذه نسخة تجريبية للواجهة فقط. لم يُحفظ الطلب بعد. سنربط قاعدة البيانات قبل استقبال طلبات حقيقية.";
 });
-renderProducts();
+  loadProducts();
 </script>
 </body>
 </html>
