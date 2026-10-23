@@ -2,164 +2,487 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#171717">
-  <title>ZALMEX | الإدارة</title>
-  <style>
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Arial,sans-serif;background:#f4f5f7;color:#171717}
-    header{background:#171717;color:white;padding:22px 16px;text-align:center}
-    .logo{font-size:27px;font-weight:900;color:#f5c542;letter-spacing:2px}
-    header p{margin:8px 0 0;color:#ddd}
-    main{max-width:650px;margin:24px auto;padding:16px}
-    .card{background:white;padding:22px;border-radius:14px;box-shadow:0 3px 15px #0000000c;margin-bottom:16px}
-    h2{margin-top:0;font-size:20px}
-    label{display:block;margin:14px 0 7px;font-weight:bold}
-    input{width:100%;padding:13px;border:1px solid #ccc;border-radius:8px;font-size:16px}
-    button{width:100%;border:0;border-radius:8px;background:#171717;color:white;padding:14px;font-size:16px;font-weight:bold;margin-top:16px}
-    .note{line-height:1.8;color:#555;font-size:14px}
-    .status{background:#fff6d7;padding:12px;border-radius:8px;line-height:1.8}
-    footer{text-align:center;padding:20px;color:#777;font-size:13px}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111827">
+<title>ZALMEX | لوحة التحكم</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --navy:#111827;--bg:#f4f6fb;--white:#fff;
+  --blue:#4f46e5;--teal:#0d9488;--gold:#f5b82e;
+  --text:#20283b;--muted:#8490a5;--border:#e8ebf2;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+button,input{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh}
+.sidebar{position:fixed;right:0;top:0;bottom:0;width:245px;
+background:var(--navy);color:white;padding:24px 15px;z-index:5;
+display:flex;flex-direction:column}
+.brand{display:flex;align-items:center;gap:11px;padding:5px 10px 28px}
+.brand-icon{width:42px;height:42px;border-radius:13px;background:var(--gold);
+color:#111827;display:grid;place-items:center;font-size:23px;font-weight:900}
+.brand-name{font-size:23px;font-weight:900;letter-spacing:1px}
+.brand small{display:block;color:#aab3c5;font-size:11px;margin-top:3px}
+.nav-label{font-size:11px;color:#8995aa;padding:12px 12px}
+.nav{display:grid;gap:5px}
+.nav button{width:100%;text-align:right;color:#cbd2df;background:transparent;
+border:0;border-radius:10px;padding:12px;font-size:14px;display:flex;
+align-items:center;gap:12px}
+.nav button.active,.nav button:hover{background:#29344a;color:white}
+.nav button.active{box-shadow:inset -3px 0 var(--gold)}
+.nav-icon{width:22px;text-align:center;font-size:17px}
+.sidebar-bottom{margin-top:auto;border-top:1px solid #30394b;padding-top:15px;
+color:#9ca8ba;font-size:12px;line-height:1.8}
+.main{margin-right:245px;padding:25px 30px;max-width:1800px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;
+margin-bottom:26px}
+.topbar h1{font-size:25px;margin:0 0 7px;font-weight:800}
+.sub{font-size:13px;color:var(--muted)}
+.top-actions{display:flex;align-items:center;gap:10px}
+.icon-btn,.secondary{border:1px solid var(--border);background:white;
+border-radius:10px;padding:11px 14px;color:var(--text)}
+.avatar{width:40px;height:40px;border-radius:13px;background:#e0e7ff;
+color:#4338ca;display:grid;place-items:center;font-weight:bold}
+.btn{border:0;background:var(--blue);color:white;border-radius:10px;
+padding:11px 16px;font-weight:700}
+.btn:hover{filter:brightness(.95)}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;
+margin-bottom:22px}
+.stat{background:white;border:1px solid var(--border);border-radius:16px;
+padding:19px;min-width:0}
+.stat-top{display:flex;align-items:center;justify-content:space-between;
+gap:8px;color:var(--muted);font-size:13px}
+.stat-icon{width:39px;height:39px;display:grid;place-items:center;
+border-radius:12px;font-size:19px}
+.i-blue{background:#eef2ff}.i-green{background:#dff8f0}
+.i-gold{background:#fff5d9}.i-red{background:#ffe8e8}
+.stat-value{font-size:27px;font-weight:850;margin:16px 0 6px;
+overflow-wrap:anywhere}
+.stat-foot{font-size:12px;color:var(--muted)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:18px}
+.panel{background:white;border:1px solid var(--border);border-radius:16px;
+padding:20px;margin-bottom:18px;min-width:0}
+.panel-head{display:flex;align-items:center;justify-content:space-between;
+gap:12px;margin-bottom:17px}
+.panel-head h2{font-size:17px;margin:0}
+.panel-head p{font-size:12px;color:var(--muted);margin:6px 0 0}
+.pill{display:inline-block;padding:6px 9px;border-radius:20px;
+font-size:11px;font-weight:700;white-space:nowrap}
+.pending{background:#fff3cf;color:#9a6700}
+.confirmed{background:#dff8e9;color:#137548}
+.other-status{background:#e8edff;color:#3949ab}
+.unknown{background:#edf0f5;color:#5c6678}
+.table-wrap{width:100%;overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:650px;text-align:right}
+th{background:#f8f9fc;color:#778196;font-size:12px;font-weight:700}
+th,td{padding:14px 12px;border-bottom:1px solid #edf0f5}
+td{font-size:13px}
+tbody tr:hover{background:#fafbff}
+.order-number{font-weight:800;color:#4f46e5}
+.customer{font-weight:700}
+.muted{font-size:11px;color:var(--muted);margin-top:5px}
+.amount{font-weight:800;white-space:nowrap}
+.empty{text-align:center;padding:35px 10px;color:var(--muted)}
+.notice{padding:13px;border-radius:10px;background:#f3f5ff;
+color:#414a7a;font-size:13px;line-height:1.8}
+.activity{display:grid;gap:18px}
+.activity-item{display:flex;gap:11px;align-items:flex-start}
+.activity-dot{width:10px;height:10px;border-radius:50%;background:var(--teal);
+margin-top:5px;flex-shrink:0}
+.activity-item b{font-size:13px}
+.activity-item p{font-size:12px;color:var(--muted);margin:5px 0 0;
+overflow-wrap:anywhere}
+.search{width:100%;padding:11px 13px;border:1px solid var(--border);
+border-radius:10px;background:#fff;outline:none}
+.search:focus{border-color:var(--blue)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}
+.toolbar .search{flex:1;min-width:170px}
+.toolbar select{padding:10px;border:1px solid var(--border);
+border-radius:10px;background:white;color:var(--text)}
+#loginView{max-width:440px;margin:65px auto;padding:20px}
+.login-card{background:white;padding:28px;border:1px solid var(--border);
+border-radius:20px;box-shadow:0 15px 45px #17213b0b}
+.login-card h1{font-size:25px;margin:0 0 8px}
+.login-card label{display:block;font-size:13px;font-weight:700;margin:18px 0 8px}
+.login-card input{width:100%;padding:13px;border:1px solid #dfe3ec;
+border-radius:10px}
+.login-card .btn{width:100%;margin-top:20px;padding:14px}
+#message{font-size:13px;line-height:1.8;margin-top:14px;overflow-wrap:anywhere}
+.hidden{display:none!important}
+.section-title{font-size:21px;margin:0 0 7px}
+.placeholder-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.placeholder{background:#f8f9fc;padding:18px;border-radius:12px}
+.placeholder h3{margin:0 0 8px;font-size:15px}
+.placeholder p{color:var(--muted);font-size:13px;line-height:1.8;margin:0}
+.mobile-brand{display:none}
+@media(max-width:1100px){
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .layout{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:720px){
+ .sidebar{position:sticky;top:0;bottom:auto;width:100%;height:auto;
+ padding:10px 12px;display:block}
+ .brand{padding:2px 4px 10px}
+ .brand-icon{width:35px;height:35px;font-size:19px}
+ .brand-name{font-size:20px}
+ .brand small{font-size:10px}
+ .nav-label,.sidebar-bottom{display:none}
+ .nav{display:flex;overflow-x:auto;gap:5px;padding-bottom:2px}
+ .nav button{width:auto;min-width:max-content;padding:9px 11px;
+ font-size:12px;gap:6px}
+ .nav-icon{font-size:14px;width:auto}
+ .main{margin-right:0;padding:19px 12px}
+ .topbar{align-items:flex-start;margin-bottom:19px}
+ .topbar h1{font-size:21px}
+ .top-actions{gap:6px}
+ .top-actions .secondary{padding:9px;font-size:12px}
+ .avatar{width:35px;height:35px}
+ .grid{gap:10px;margin-bottom:15px}
+ .stat{padding:13px;border-radius:13px}
+ .stat-top{font-size:11px;align-items:flex-start}
+ .stat-icon{width:31px;height:31px;font-size:15px}
+ .stat-value{font-size:22px;margin:13px 0 5px}
+ .stat-foot{font-size:10px}
+ .panel{padding:14px;border-radius:13px}
+ .layout{gap:0}
+ .panel-head h2{font-size:15px}
+ .placeholder-grid{grid-template-columns:1fr}
+ #loginView{margin:25px auto;padding:14px}
+}
+</style>
 </head>
 <body>
-  <header>
-    <div class="logo">ZALMEX</div>
-    <p>لوحة إدارة المتجر</p>
-  </header>
-
-  <main>
-    <section class="card">
-      <h2>تسجيل دخول المدير</h2>
-      <p class="note">هذه صفحة الإدارة الأولية. تسجيل الدخول وجلب الطلبات يحتاجان إلى الربط الآمن بقاعدة البيانات.</p>
+<div id="loginView">
+  <div class="login-card">
+    <div class="brand" style="padding:0 0 22px">
+      <div class="brand-icon">Z</div>
+      <div><div class="brand-name" style="color:#111827">ZALMEX</div>
+      <small style="color:#8490a5">ADMINISTRATION</small></div>
+    </div>
+    <h1>مرحبًا بعودتك 👋</h1>
+    <p class="sub">سجّل الدخول لإدارة متجرك الإلكتروني.</p>
+    <form id="loginForm">
       <label for="email">البريد الإلكتروني</label>
-      <input id="email" type="email" autocomplete="username" placeholder="البريد الإلكتروني">
+      <input id="email" type="email" autocomplete="username" required placeholder="البريد الإلكتروني">
       <label for="password">كلمة المرور</label>
-      <input id="password" type="password" autocomplete="current-password" placeholder="كلمة المرور">
-      <button type="button" id="loginButton">دخول</button>
+      <input id="password" type="password" autocomplete="current-password" required placeholder="كلمة المرور">
+      <button class="btn" id="loginButton" type="submit">تسجيل الدخول</button>
+    </form>
+    <div id="message" role="status"></div>
+  </div>
+</div>
+
+<div id="appView" class="app hidden">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">Z</div>
+      <div><div class="brand-name">ZALMEX</div><small>لوحة إدارة المتجر</small></div>
+    </div>
+    <div class="nav-label">القائمة الرئيسية</div>
+    <nav class="nav">
+      <button class="active" data-page="dashboard"><span class="nav-icon">▦</span>الرئيسية</button>
+      <button data-page="orders"><span class="nav-icon">▤</span>الطلبات</button>
+      <button data-page="products"><span class="nav-icon">◇</span>المنتجات</button>
+      <button data-page="shipping"><span class="nav-icon">▰</span>شركات التوصيل</button>
+      <button data-page="marketing"><span class="nav-icon">◎</span>بيكسل الإعلانات</button>
+      <button data-page="analytics"><span class="nav-icon">▥</span>التحليلات</button>
+      <button data-page="settings"><span class="nav-icon">⚙</span>الإعدادات</button>
+    </nav>
+    <div class="sidebar-bottom">ZALMEX Commerce<br>مستقل عن Shopify</div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1 id="pageTitle">لوحة التحكم</h1>
+        <div class="sub" id="pageSubtitle">ملخص متجرك وأحدث الطلبات</div>
+      </div>
+      <div class="top-actions">
+        <button class="secondary" id="refreshButton" type="button">↻ تحديث</button>
+        <div class="avatar">Z</div>
+      </div>
+    </div>
+
+    <section id="dashboardPage">
+      <div class="grid">
+        <div class="stat">
+          <div class="stat-top"><span>إجمالي الطلبات المحمّلة</span><span class="stat-icon i-blue">▤</span></div>
+          <div class="stat-value" id="statOrders">—</div>
+          <div class="stat-foot">من آخر 50 طلبًا</div>
+        </div>
+        <div class="stat">
+          <div class="stat-top"><span>طلبات جديدة</span><span class="stat-icon i-gold">◷</span></div>
+          <div class="stat-value" id="statPending">—</div>
+          <div class="stat-foot">تحتاج إلى المراجعة</div>
+        </div>
+        <div class="stat">
+          <div class="stat-top"><span>قيمة الطلبات المحمّلة</span><span class="stat-icon i-green">دج</span></div>
+          <div class="stat-value" id="statSales">—</div>
+          <div class="stat-foot">مجموع قيمة الطلبات المعروضة</div>
+        </div>
+        <div class="stat">
+          <div class="stat-top"><span>طلبات مؤكدة</span><span class="stat-icon i-red">✓</span></div>
+          <div class="stat-value" id="statConfirmed">—</div>
+          <div class="stat-foot">حسب حالة الطلب المسجلة</div>
+        </div>
+      </div>
+
+      <div class="layout">
+        <section class="panel">
+          <div class="panel-head">
+            <div><h2>أحدث الطلبات</h2><p>الطلبات المسجلة في قاعدة البيانات</p></div>
+            <button class="secondary" type="button" data-goto="orders">عرض الكل ←</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>رقم الطلب</th><th>العميل</th><th>الولاية</th><th>المبلغ</th><th>الحالة</th></tr></thead>
+              <tbody id="recentOrders"><tr><td colspan="5" class="empty">سجّل الدخول لتحميل الطلبات.</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+        <div>
+          <section class="panel">
+            <div class="panel-head"><div><h2>حالة الربط</h2><p>اتصال قاعدة البيانات</p></div></div>
+            <div class="activity">
+              <div class="activity-item"><span class="activity-dot"></span><div><b id="connectionStatus">في انتظار تسجيل الدخول</b><p id="connectionDetail">سيتم فحص الاتصال عند الدخول.</p></div></div>
+              <div class="activity-item"><span class="activity-dot" style="background:#f5b82e"></span><div><b>التوصيل</b><p>لم يتم ربط شركة توصيل خارجية بعد.</p></div></div>
+              <div class="activity-item"><span class="activity-dot" style="background:#818cf8"></span><div><b>بيكسل الإعلانات</b><p>إعداد Meta وTikTok ما زال مطلوبًا.</p></div></div>
+            </div>
+          </section>
+          <section class="panel">
+            <div class="panel-head"><div><h2>ملاحظة أمنية</h2></div></div>
+            <div class="notice">عرض الطلبات لا يمنح صلاحية آمنة لتعديلها. يجب إعداد سياسات Supabase قبل تفعيل التأكيد أو خصم المخزون.</div>
+          </section>
+        </div>
+      </div>
     </section>
 
-    <section class="card">
-      <h2>الطلبات</h2>
-      <div class="status">⏳ عرض الطلبات وتأكيدها غير مفعّل بعد. سنربطه بعد إعداد صلاحيات المدير بأمان.</div>
+    <section id="ordersPage" class="hidden">
+      <div class="panel">
+        <div class="panel-head"><div><h2>إدارة الطلبات</h2><p>عرض بيانات الطلبات المسجلة</p></div></div>
+        <div class="toolbar">
+          <input id="orderSearch" class="search" placeholder="ابحث برقم الطلب أو اسم العميل أو الهاتف">
+          <select id="statusFilter">
+            <option value="">كل الحالات</option>
+            <option value="pending">جديد / قيد الانتظار</option>
+            <option value="confirmed">مؤكد</option>
+            <option value="shipped">تم الشحن</option>
+            <option value="delivered">تم التسليم</option>
+            <option value="cancelled">ملغي</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>رقم الطلب</th><th>العميل والهاتف</th><th>الولاية</th><th>البلدية</th><th>المبلغ</th><th>الحالة</th><th>تاريخ الطلب</th></tr></thead>
+            <tbody id="allOrders"><tr><td colspan="7" class="empty">لم يتم تحميل الطلبات.</td></tr></tbody>
+          </table>
+        </div>
+        <p class="sub" id="orderCount"></p>
+      </div>
     </section>
 
-    <section class="card">
-      <h2>حالة المتجر</h2>
-      <p class="note">الموقع الرئيسي مستقل عن Shopify. لا تشارك مفاتيح Supabase السرية داخل ملفات الموقع.</p>
+    <section id="placeholderPage" class="hidden">
+      <div class="panel">
+        <h2 class="section-title" id="placeholderTitle">القسم</h2>
+        <p class="sub" id="placeholderDescription"></p>
+        <div class="placeholder-grid" id="placeholderCards"></div>
+      </div>
     </section>
   </main>
+</div>
 
-  <footer>© ZALMEX — لوحة الإدارة</footer>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = "https://jblehthxfyeseqbzhijy.supabase.co";
 const SUPABASE_KEY = "sb_publishable_6JRg31NgFFiry4ah_qxBvw_9ffoph9s";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+const $ = (id) => document.getElementById(id);
+const loginForm = $("loginForm");
+const message = $("message");
+let orders = [];
 
-  const message = document.querySelector(".status");
-  const loginButton = document.getElementById("loginButton");
-
-loginButton.onclick = async function () {
-  message.style.whiteSpace = "pre-wrap";
-  message.textContent = "جاري تسجيل الدخول...";
-
-  const email = document.querySelector("#email").value.trim();
-  const password = document.querySelector("#password").value;
-
-  if (!email || !password) {
-    message.textContent = "أدخل البريد الإلكتروني وكلمة المرور.";
-    return;
-  }
-
-  const { error: loginError } = await db.auth.signInWithPassword({
-    email,
-    password
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[char]));
+}
+function money(value) {
+  const n = Number(value);
+  return (Number.isFinite(n) ? n : 0).toLocaleString("fr-DZ") + " دج";
+}
+function statusInfo(status) {
+  const s = String(status ?? "").toLowerCase();
+  const map = {
+    pending:["قيد الانتظار","pending"],
+    confirmed:["مؤكد","confirmed"],
+    shipped:["تم الشحن","other-status"],
+    out_for_delivery:["قيد التوصيل","other-status"],
+    delivered:["تم التسليم","confirmed"],
+    cancelled:["ملغي","unknown"],
+    canceled:["ملغي","unknown"]
+  };
+  return map[s] || [status || "غير محدد","unknown"];
+}
+function statusBadge(status) {
+  const [label, cls] = statusInfo(status);
+  return '<span class="pill '+cls+'">'+escapeHTML(label)+'</span>';
+}
+function dateText(value) {
+  if (!value) return "—";
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? escapeHTML(value) :
+    escapeHTML(d.toLocaleString("ar-DZ",{dateStyle:"medium",timeStyle:"short"}));
+}
+function renderStats() {
+  $("statOrders").textContent = orders.length;
+  $("statPending").textContent = orders.filter(o =>
+    String(o.status ?? "").toLowerCase() === "pending").length;
+  $("statConfirmed").textContent = orders.filter(o =>
+    ["confirmed","shipped","out_for_delivery","delivered"].includes(
+      String(o.status ?? "").toLowerCase())).length;
+  $("statSales").textContent = orders.reduce((sum,o) =>
+    sum + (Number(o.total) || 0),0).toLocaleString("fr-DZ") + " دج";
+}
+function renderRecent() {
+  const list = orders.slice(0,5);
+  $("recentOrders").innerHTML = list.length ? list.map(o => `
+    <tr>
+      <td class="order-number">${escapeHTML(o.order_number || ("#"+o.id))}</td>
+      <td><div class="customer">${escapeHTML(o.customer_name || "—")}</div>
+      <div class="muted">${escapeHTML(o.phone || "")}</div></td>
+      <td>${escapeHTML(o.wilaya || "—")}</td>
+      <td class="amount">${money(o.total)}</td>
+      <td>${statusBadge(o.status)}</td>
+    </tr>`).join("") :
+    '<tr><td colspan="5" class="empty">لا توجد طلبات مسجلة.</td></tr>';
+}
+function renderAllOrders() {
+  const q = $("orderSearch").value.trim().toLowerCase();
+  const filter = $("statusFilter").value.toLowerCase();
+  const filtered = orders.filter(o => {
+    const haystack = [o.order_number,o.customer_name,o.phone,o.wilaya,o.municipality]
+      .join(" ").toLowerCase();
+    return haystack.includes(q) && (!filter ||
+      String(o.status ?? "").toLowerCase() === filter);
   });
-
-  if (loginError) {
-    message.textContent = "فشل تسجيل الدخول: " + loginError.message;
-    return;
-  }
-
-  message.textContent = "تم تسجيل الدخول. جاري تحميل الطلبات...";
-
-  const { data, error } = await db
-    .from("orders")
-    .select("*")
-    .limit(50);
-
+  $("allOrders").innerHTML = filtered.length ? filtered.map(o => `
+    <tr>
+      <td class="order-number">${escapeHTML(o.order_number || ("#"+o.id))}</td>
+      <td><div class="customer">${escapeHTML(o.customer_name || "—")}</div>
+      <div class="muted">${escapeHTML(o.phone || "")}</div></td>
+      <td>${escapeHTML(o.wilaya || "—")}</td>
+      <td>${escapeHTML(o.municipality || "—")}</td>
+      <td class="amount">${money(o.total)}</td>
+      <td>${statusBadge(o.status)}</td>
+      <td>${dateText(o.created_at)}</td>
+    </tr>`).join("") :
+    '<tr><td colspan="7" class="empty">لا توجد نتائج مطابقة.</td></tr>';
+  $("orderCount").textContent = "عدد النتائج: " + filtered.length;
+}
+async function loadOrders() {
+  $("connectionStatus").textContent = "جاري تحميل الطلبات...";
+  $("connectionDetail").textContent = "يتم الاتصال بقاعدة البيانات.";
+  const { data, error } = await db.from("orders")
+    .select("*").order("created_at",{ascending:false}).limit(50);
   if (error) {
+    $("connectionStatus").textContent = "تعذر تحميل الطلبات";
+    $("connectionDetail").textContent = error.message;
     message.textContent = "تعذر تحميل الطلبات: " + error.message;
-    return;
+    return false;
   }
-
-  
-  if (!data || data.length === 0) {
-    message.textContent = "تم تسجيل الدخول، لكن لا توجد طلبات ظاهرة.";
-    return;
+  orders = data || [];
+  renderStats();
+  renderRecent();
+  renderAllOrders();
+  $("connectionStatus").textContent = "الاتصال ناجح";
+  $("connectionDetail").textContent = "تم تحميل " + orders.length + " طلب.";
+  message.textContent = "";
+  return true;
+}
+loginForm.addEventListener("submit", async event => {
+  event.preventDefault();
+  const email = $("email").value.trim();
+  const password = $("password").value;
+  if (!email || !password) return;
+  $("loginButton").disabled = true;
+  $("loginButton").textContent = "جاري تسجيل الدخول...";
+  message.textContent = "";
+  try {
+    const { error } = await db.auth.signInWithPassword({email,password});
+    if (error) {
+      message.textContent = "فشل تسجيل الدخول: " + error.message;
+      return;
+    }
+    $("loginView").classList.add("hidden");
+    $("appView").classList.remove("hidden");
+    await loadOrders();
+  } catch (e) {
+    message.textContent = "حدث خطأ أثناء الاتصال. تحقق من الإنترنت وحاول مجددًا.";
+  } finally {
+    $("loginButton").disabled = false;
+    $("loginButton").textContent = "تسجيل الدخول";
   }
+});
+$("refreshButton").addEventListener("click", loadOrders);
+$("orderSearch").addEventListener("input", renderAllOrders);
+$("statusFilter").addEventListener("change", renderAllOrders);
 
-  const escapeHTML = (value) =>
-    String(value ?? "").replace(/[&<>"']/g, (char) => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;"
-    }[char]));
-
-  const preferredColumns = [
-    "order_number",
-    "customer_name",
-    "status",
-    "total",
-    "created_at"
-  ];
-
-  const columns = preferredColumns.filter(
-    (key) => Object.keys(data[0]).includes(key)
-  );
-
-  if (columns.length === 0) {
-    columns.push(...Object.keys(data[0]).slice(0, 4));
-  }
-
-  message.style.whiteSpace = "normal";
-  message.style.overflowX = "auto";
-
-  message.innerHTML = `
-    <h3>الطلبات المسجلة (${data.length})</h3>
-    <table style="width:100%;border-collapse:collapse;background:white;font-size:13px">
-      <thead>
-        <tr>
-          ${columns.map(key => `
-            <th style="padding:10px;border:1px solid #ddd;text-align:right">
-              ${escapeHTML(key)}
-            </th>
-          `).join("")}
-        </tr>
-      </thead>
-      <tbody>
-        ${data.map(order => `
-          <tr>
-            ${columns.map(key => `
-              <td style="padding:10px;border:1px solid #ddd">
-                ${escapeHTML(order[key])}
-              </td>
-            `).join("")}
-          </tr>
-        `).join("")}
-      </tbody>
-    </table>
-  `;
-
+const pageInfo = {
+  dashboard:["لوحة التحكم","ملخص متجرك وأحدث الطلبات"],
+  orders:["الطلبات","ابحث في الطلبات المسجلة وتابع حالتها"],
+  products:["المنتجات","إدارة كتالوج منتجات ZALMEX"],
+  shipping:["شركات التوصيل","إعداد الربط مع شركات التوصيل"],
+  marketing:["بيكسل الإعلانات","إعداد تتبع الحملات الإعلانية"],
+  analytics:["التحليلات","متابعة أداء المتجر والمبيعات"],
+  settings:["الإعدادات","إعدادات الإدارة والمتجر"]
 };
+const placeholders = {
+  products:[
+    ["كتالوج المنتجات","سيتم ربط هذا القسم بجدول المنتجات لإضافة المنتجات وتعديل الأسعار والصور والمخزون."],
+    ["إدارة المخزون","سيتم عرض المخزون وتسجيل الخصم بعد تأكيد الطلب وفق قواعد المخزون."]
+  ],
+  shipping:[
+    ["ربط شركة التوصيل","يتطلب اختيار الشركة والحصول على بيانات API الرسمية إن كانت متاحة."],
+    ["أسعار الولايات","سيتم إعداد رسوم التوصيل حسب الولاية ونوع التوصيل."]
+  ],
+  marketing:[
+    ["Meta Pixel","يتطلب إدخال معرّف Pixel واختبار أحداث التصفح والطلب."],
+    ["TikTok Pixel","يتطلب إدخال معرّف Pixel والتحقق من أحداث التحويل."]
+  ],
+  analytics:[
+    ["تقارير المبيعات","ستُبنى التقارير على الطلبات الفعلية والفترة الزمنية المختارة."],
+    ["مصادر الزيارات","يتطلب ربط أدوات التحليلات أو بيانات أحداث الموقع."]
+  ],
+  settings:[
+    ["الأمان والصلاحيات","يجب تقييد قراءة وتعديل الطلبات بسياسات Supabase وصلاحيات المدير."],
+    ["النسخ الاحتياطي","يجب إعداد خطة نسخ احتياطي مناسبة لقاعدة البيانات."]
+  ]
+};
+function showPage(page) {
+  const info = pageInfo[page] || pageInfo.dashboard;
+  $("pageTitle").textContent = info[0];
+  $("pageSubtitle").textContent = info[1];
+  $("dashboardPage").classList.toggle("hidden",page !== "dashboard");
+  $("ordersPage").classList.toggle("hidden",page !== "orders");
+  $("placeholderPage").classList.toggle("hidden",!placeholders[page]);
+  document.querySelectorAll("[data-page]").forEach(btn =>
+    btn.classList.toggle("active",btn.dataset.page === page));
+  if (placeholders[page]) {
+    $("placeholderTitle").textContent = info[0];
+    $("placeholderDescription").textContent = info[1];
+    $("placeholderCards").innerHTML = placeholders[page].map(item => `
+      <div class="placeholder"><h3>${escapeHTML(item[0])}</h3>
+      <p>${escapeHTML(item[1])}</p></div>`).join("");
+  }
+}
+document.querySelectorAll("[data-page]").forEach(btn =>
+  btn.addEventListener("click",() => showPage(btn.dataset.page)));
+document.querySelectorAll("[data-goto]").forEach(btn =>
+  btn.addEventListener("click",() => showPage(btn.dataset.goto)));
 </script>
 </body>
 </html>
