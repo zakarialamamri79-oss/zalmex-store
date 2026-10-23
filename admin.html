@@ -439,6 +439,45 @@ $("refreshButton").addEventListener("click", loadOrders);
 $("orderSearch").addEventListener("input", renderAllOrders);
 $("statusFilter").addEventListener("change", renderAllOrders);
 
+async function confirmOrder(orderId) {
+  const order = orders.find(o => Number(o.id) === Number(orderId));
+
+  if (!order) {
+    alert("لم يتم العثور على الطلب.");
+    return;
+  }
+
+  if (String(order.status).toLowerCase() !== "pending") {
+    alert("هذا الطلب ليس قيد الانتظار.");
+    return;
+  }
+
+  if (!confirm(
+    "هل تريد تأكيد الطلب رقم " +
+    (order.order_number || order.id) +
+    "؟ سيتم خصم المنتجات من المخزون."
+  )) {
+    return;
+  }
+
+  try {
+    const { data, error } = await db.rpc(
+      "confirm_zalmex_order",
+      { p_order_id: Number(orderId) }
+    );
+
+    if (error) {
+      alert("تعذر تأكيد الطلب: " + error.message);
+      return;
+    }
+
+    alert("تم تأكيد الطلب بنجاح.");
+    await loadOrders();
+  } catch (e) {
+    alert("حدث خطأ أثناء تأكيد الطلب. حاول مجددًا.");
+  }
+}
+
 const pageInfo = {
   dashboard:["لوحة التحكم","ملخص متجرك وأحدث الطلبات"],
   orders:["الطلبات","ابحث في الطلبات المسجلة وتابع حالتها"],
