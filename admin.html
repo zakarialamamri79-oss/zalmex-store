@@ -99,9 +99,66 @@ loginButton.onclick = async function () {
     return;
   }
 
-  message.textContent = data.length
-    ? "الطلبات المسجلة:\n\n" + JSON.stringify(data, null, 2)
-    : "تم تسجيل الدخول، لكن لا توجد طلبات ظاهرة.";
+  
+  if (!data || data.length === 0) {
+    message.textContent = "تم تسجيل الدخول، لكن لا توجد طلبات ظاهرة.";
+    return;
+  }
+
+  const escapeHTML = (value) =>
+    String(value ?? "").replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[char]));
+
+  const preferredColumns = [
+    "order_number",
+    "customer_name",
+    "status",
+    "total",
+    "created_at"
+  ];
+
+  const columns = preferredColumns.filter(
+    (key) => Object.keys(data[0]).includes(key)
+  );
+
+  if (columns.length === 0) {
+    columns.push(...Object.keys(data[0]).slice(0, 4));
+  }
+
+  message.style.whiteSpace = "normal";
+  message.style.overflowX = "auto";
+
+  message.innerHTML = `
+    <h3>الطلبات المسجلة (${data.length})</h3>
+    <table style="width:100%;border-collapse:collapse;background:white;font-size:13px">
+      <thead>
+        <tr>
+          ${columns.map(key => `
+            <th style="padding:10px;border:1px solid #ddd;text-align:right">
+              ${escapeHTML(key)}
+            </th>
+          `).join("")}
+        </tr>
+      </thead>
+      <tbody>
+        ${data.map(order => `
+          <tr>
+            ${columns.map(key => `
+              <td style="padding:10px;border:1px solid #ddd">
+                ${escapeHTML(order[key])}
+              </td>
+            `).join("")}
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+  `;
+
 };
 </script>
 </body>
