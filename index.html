@@ -156,14 +156,75 @@ function removeItem(id){
   cart=cart.filter(p=>p.id!==id);
   renderCart();
 }
-document.getElementById("orderForm").addEventListener("submit",function(e){
+  document.getElementById("orderForm").addEventListener("submit", async function(e) {
   e.preventDefault();
-  if(!cart.length){
-    document.getElementById("message").textContent="أضف منتجًا إلى السلة أولًا.";
+
+  const message = document.getElementById("message");
+
+  if (!cart.length) {
+    message.textContent = "أضف منتجًا إلى السلة أولًا.";
     return;
   }
-  document.getElementById("message").textContent=
-    "هذه نسخة تجريبية للواجهة فقط. لم يُحفظ الطلب بعد. سنربط قاعدة البيانات قبل استقبال طلبات حقيقية.";
+
+  const form = new FormData(this);
+
+  const order = {
+    name: String(form.get("name") || "").trim(),
+    phone: String(form.get("phone") || "").trim(),
+    wilaya: String(form.get("wilaya") || "").trim(),
+    municipality: String(form.get("municipality") || "").trim(),
+    address: String(form.get("address") || "").trim(),
+    items: cart.map(item => ({
+      id: item.id,
+      qty: item.qty
+    }))
+  };
+
+  if (!order.name || !order.phone || !order.wilaya ||
+      !order.municipality || !order.address) {
+    message.textContent = "عمّر جميع معلومات الطلب.";
+    return;
+  }
+
+  const button = this.querySelector('button[type="submit"]');
+  if (button) button.disabled = true;
+
+  message.textContent = "جارٍ إرسال الطلب...";
+
+  try {
+    const response = await fetch(
+      "https://jblehthxfyeseqbzhijy.supabase.co/functions/v1/super-task",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_KEY,
+          "Authorization": "Bearer " + SUPABASE_KEY
+        },
+        body: JSON.stringify(order)
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || "تعذر تسجيل الطلب.");
+    }
+
+    message.textContent =
+      "تم تسجيل طلبك بنجاح! رقم الطلب: " + result.order_number;
+
+    cart = [];
+    renderCart();
+    this.reset();
+
+  } catch (error) {
+    console.error(error);
+    message.textContent =
+      error.message || "حدث خطأ. حاول مرة أخرى.";
+  } finally {
+    if (button) button.disabled = false;
+  }
 });
   loadProducts();
 </script>
