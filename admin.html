@@ -52,5 +52,57 @@
   </main>
 
   <footer>© ZALMEX — لوحة الإدارة</footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://jblehthxfyeseqbzhijy.supabase.co";
+const SUPABASE_KEY = "sb_publishable_6JRg31NgFFiry4ah_qxBvw_9ffoph9s ";
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+const message = document.querySelector(".status");
+const loginButton = document.querySelector("button");
+
+loginButton.onclick = async function () {
+  message.style.whiteSpace = "pre-wrap";
+  message.textContent = "جاري تسجيل الدخول...";
+
+  const email = document.querySelector("#email").value.trim();
+  const password = document.querySelector("#password").value;
+
+  if (!email || !password) {
+    message.textContent = "أدخل البريد الإلكتروني وكلمة المرور.";
+    return;
+  }
+
+  const { error: loginError } = await db.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (loginError) {
+    message.textContent = "فشل تسجيل الدخول: " + loginError.message;
+    return;
+  }
+
+  message.textContent = "تم تسجيل الدخول. جاري تحميل الطلبات...";
+
+  const { data, error } = await db
+    .from("orders")
+    .select("*")
+    .limit(50);
+
+  if (error) {
+    message.textContent = "تعذر تحميل الطلبات: " + error.message;
+    return;
+  }
+
+  message.textContent = data.length
+    ? "الطلبات المسجلة:\n\n" + JSON.stringify(data, null, 2)
+    : "تم تسجيل الدخول، لكن لا توجد طلبات ظاهرة.";
+};
+</script>
 </body>
 </html>
