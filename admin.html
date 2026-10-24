@@ -584,6 +584,128 @@ function cancelProduct() {
   $("productForm").reset();
   $("productId").value = "";
 }
+  
+let products = [];
+
+async function loadProducts() {
+  const box = $("productMessage");
+  box.textContent = "جاري تحميل المنتجات...";
+
+  const { data, error } = await db
+    .from("products")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    box.textContent = "تعذر تحميل المنتجات: " + error.message;
+    return;
+  }
+
+  products = data || [];
+  renderProducts();
+}
+
+function renderProducts() {
+  const q = $("productSearch").value.trim().toLowerCase();
+
+  const filtered = products.filter(p =>
+    String(p.name || "").toLowerCase().includes(q)
+  );
+
+  $("productsTable").innerHTML = filtered.length
+    ? filtered.map(p => `
+      <tr>
+        <td>${escapeHTML(p.name)}</td>
+        <td>${money(p.price)}</td>
+        <td>${Number(p.stock) || 0}</td>
+        <td>${p.is_active ? "نشط" : "مخفي"}</td>
+        <td>
+          <button class="secondary" type="button"
+            onclick="editProduct(${Number(p.id)})">
+            تعديل
+          </button>
+        </td>
+      </tr>
+    `).join("")
+    : '<tr><td colspan="5" class="empty">لا توجد منتجات.</td></tr>';
+
+  $("productMessage").textContent =
+    "عدد المنتجات: " + filtered.length;
+}
+
+function editProduct(id) {
+  const p = products.find(item => Number(item.id) === Number(id));
+  if (!p) return;
+
+  $("productId").value = p.id;
+  $("productName").value = p.name || "";
+  $("productDescription").value = p.description || "";
+  $("productPrice").value = p.price ?? "";
+  $("productComparePrice").value = p.compare_at_price ?? "";
+  $("productStock").value = p.stock ?? 0;
+  $("productCategory").value = p.category || "";
+  $("productImage").value = p.image_url || "";
+  $("productSku").value = p.sku || "";
+  $("productActive").checked = Boolean(p.is_active);
+
+  $("productForm").classList.remove("hidden");
+  $("productName").focus();
+}
+
+$("productForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const button = $("productForm").querySelector('button[type="submit"]');
+  button.disabled = true;
+  button.textContent = "جاري الحفظ...";
+
+  const payload = {
+    name: $("productName").value.trim(),
+    description: $("productDescription").value.trim() || null,
+    price: Number($("productPrice").value),
+    compare_at_price: $("productComparePrice").value === ""
+      ? null : Number($("productComparePrice").value),
+    stock: Number($("productStock").value),
+    category: $("productCategory").value.trim() || null,
+    image_url: $("productImage").value.trim() || null,
+    sku: $("productSku").value.trim() || null,
+    is_active: $("productActive").checked
+  };
+
+  try {
+    const id = $("productId").value;
+    let result;
+
+    if (id) {
+      result = await db.from("products")
+        .update(payload).eq("id", id);
+    } else {
+      result = await db.from("products").insert(payload);
+    }
+
+    if (result.error) {
+      $("productMessage").textContent =
+        "فشل الحفظ: " + result.error.message;
+      return;
+    }
+
+    $("productMessage").textContent = "تم حفظ المنتج بنجاح.";
+    cancelProduct();
+    await loadProducts();
+  } catch (error) {
+    $("productMessage").textContent =
+      "حدث خطأ أثناء حفظ المنتج.";
+  } finally {
+    button.disabled = false;
+    button.textContent = "حفظ المنتج";
+  }
+});
+
+$("productSearch").addEventListener("input", renderProducts);
+
+document.querySelector('[data-page="products"]')
+  .addEventListener("click", loadProducts);
+
 $("refreshButton").addEventListener("click", loadOrders);
 $("orderSearch").addEventListener("input", renderAllOrders);
 $("statusFilter").addEventListener("change", renderAllOrders);
