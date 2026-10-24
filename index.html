@@ -118,7 +118,7 @@ let cart = [];
   category: "أخرى",
   price: Number(p.price) || 0,
   emoji: "🛍️",
-  image: p.image_url
+      image: String(p.image_url || "").trim()
 }));
 
   renderProducts();
