@@ -284,7 +284,103 @@ border-radius:10px}
         <p class="sub" id="orderCount"></p>
       </div>
     </section>
+    <section id="productsPage" class="hidden">
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>كتالوج منتجات ZALMEX</h2>
+        <p>إضافة المنتجات وإدارة الأسعار والمخزون</p>
+      </div>
+      <button class="btn" type="button" onclick="newProduct()">
+        + إضافة منتج
+      </button>
+    </div>
 
+    <div id="productMessage" class="notice">
+      جاري تجهيز كتالوج المنتجات...
+    </div>
+
+    <form id="productForm" class="hidden">
+      <input type="hidden" id="productId">
+
+      <label for="productName">اسم المنتج</label>
+      <input class="search" id="productName" required
+        maxlength="200" placeholder="اسم المنتج">
+
+      <label for="productDescription">الوصف</label>
+      <textarea class="search" id="productDescription"
+        rows="3" placeholder="وصف المنتج"></textarea>
+
+      <label for="productPrice">سعر البيع بالدينار</label>
+      <input class="search" id="productPrice"
+        type="number" min="0" step="0.01" required>
+
+      <label for="productComparePrice">السعر القديم (اختياري)</label>
+      <input class="search" id="productComparePrice"
+        type="number" min="0" step="0.01">
+
+      <label for="productStock">المخزون</label>
+      <input class="search" id="productStock"
+        type="number" min="0" step="1" required value="0">
+
+      <label for="productCategory">الصنف</label>
+      <input class="search" id="productCategory"
+        maxlength="100" placeholder="مثال: إلكترونيات">
+
+      <label for="productImage">رابط الصورة</label>
+      <input class="search" id="productImage"
+        type="url" placeholder="https://...">
+
+      <label for="productSku">رمز المنتج SKU</label>
+      <input class="search" id="productSku"
+        maxlength="100" placeholder="اختياري">
+
+      <p>
+        <label>
+          <input id="productActive" type="checkbox" checked>
+          إظهار المنتج في المتجر
+        </label>
+      </p>
+
+      <button class="btn" type="submit">حفظ المنتج</button>
+      <button class="secondary" type="button"
+        onclick="cancelProduct()">إلغاء</button>
+    </form>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>المنتجات المسجلة</h2>
+        <p>البيانات المحفوظة في قاعدة البيانات</p>
+      </div>
+    </div>
+
+    <input class="search" id="productSearch"
+      placeholder="ابحث عن منتج...">
+
+    <div class="table-wrap" style="margin-top:15px">
+      <table>
+        <thead>
+          <tr>
+            <th>المنتج</th>
+            <th>السعر</th>
+            <th>المخزون</th>
+            <th>الحالة</th>
+            <th>الإجراء</th>
+          </tr>
+        </thead>
+        <tbody id="productsTable">
+          <tr>
+            <td colspan="5" class="empty">
+              سيتم تحميل المنتجات.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
     <section id="placeholderPage" class="hidden">
       <div class="panel">
         <h2 class="section-title" id="placeholderTitle">القسم</h2>
