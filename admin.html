@@ -568,6 +568,22 @@ loginForm.addEventListener("submit", async event => {
     button.disabled = false;
   }
 });
+  // فتح نموذج إضافة منتج جديد
+function newProduct() {
+  $("productForm").reset();
+  $("productId").value = "";
+  $("productActive").checked = true;
+
+  $("productForm").classList.remove("hidden");
+  $("productName").focus();
+}
+
+// إلغاء إضافة أو تعديل المنتج
+function cancelProduct() {
+  $("productForm").classList.add("hidden");
+  $("productForm").reset();
+  $("productId").value = "";
+}
 $("refreshButton").addEventListener("click", loadOrders);
 $("orderSearch").addEventListener("input", renderAllOrders);
 $("statusFilter").addEventListener("change", renderAllOrders);
