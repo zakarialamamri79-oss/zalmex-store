@@ -605,17 +605,18 @@ async function loadProducts() {
   renderProducts();
 }
 
+
 function renderProducts() {
   const q = $("productSearch").value.trim().toLowerCase();
 
   const filtered = products.filter(p =>
-    String(p.name || "").toLowerCase().includes(q)
+    String(p.name_ar || p.name_fr || "").toLowerCase().includes(q)
   );
 
   $("productsTable").innerHTML = filtered.length
     ? filtered.map(p => `
       <tr>
-        <td>${escapeHTML(p.name)}</td>
+        <td>${escapeHTML(p.name_ar || p.name_fr || "")}</td>
         <td>${money(p.price)}</td>
         <td>${Number(p.stock) || 0}</td>
         <td>${p.is_active ? "نشط" : "مخفي"}</td>
@@ -638,8 +639,8 @@ function editProduct(id) {
   if (!p) return;
 
   $("productId").value = p.id;
-  $("productName").value = p.name || "";
-  $("productDescription").value = p.description || "";
+  $("productName").value = p.name_ar || "";
+  $("productDescription").value = p.description_ar || "";
   $("productPrice").value = p.price ?? "";
   $("productComparePrice").value = p.compare_at_price ?? "";
   $("productStock").value = p.stock ?? 0;
@@ -660,8 +661,8 @@ $("productForm").addEventListener("submit", async event => {
   button.textContent = "جاري الحفظ...";
 
   const payload = {
-    name: $("productName").value.trim(),
-    description: $("productDescription").value.trim() || null,
+    name_ar: $("productName").value.trim(),
+    description_ar: $("productDescription").value.trim() || null,
     price: Number($("productPrice").value),
     compare_at_price: $("productComparePrice").value === ""
       ? null : Number($("productComparePrice").value),
@@ -694,12 +695,13 @@ $("productForm").addEventListener("submit", async event => {
     await loadProducts();
   } catch (error) {
     $("productMessage").textContent =
-      "حدث خطأ أثناء حفظ المنتج.";
+      "حدث خطأ أثناء حفظ المنتج: " + error.message;
   } finally {
     button.disabled = false;
     button.textContent = "حفظ المنتج";
   }
 });
+
 
 $("productSearch").addEventListener("input", renderProducts);
 
