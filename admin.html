@@ -537,6 +537,37 @@ loginForm.addEventListener("submit", async event => {
     $("loginButton").textContent = "تسجيل الدخول";
   }
 });
+  $("forgotPasswordButton").addEventListener("click", async () => {
+  const email = $("email").value.trim();
+
+  if (!email) {
+    message.textContent = "اكتب بريدك الإلكتروني أولًا.";
+    $("email").focus();
+    return;
+  }
+
+  const button = $("forgotPasswordButton");
+  button.disabled = true;
+  message.textContent = "جاري إرسال رابط الاسترجاع...";
+
+  try {
+    const { error } = await db.auth.resetPasswordForEmail(email, {
+      redirectTo:
+        "https://zakarialamamri79-oss.github.io/zalmex-store/reset-password.html"
+    });
+
+    if (error) {
+      message.textContent = "تعذر إرسال الرابط: " + error.message;
+    } else {
+      message.textContent =
+        "إذا كان البريد مسجلًا، ستصلك رسالة لاسترجاع كلمة المرور.";
+    }
+  } catch (error) {
+    message.textContent = "حدث خطأ في الاتصال. حاول مجددًا.";
+  } finally {
+    button.disabled = false;
+  }
+});
 $("refreshButton").addEventListener("click", loadOrders);
 $("orderSearch").addEventListener("input", renderAllOrders);
 $("statusFilter").addEventListener("change", renderAllOrders);
