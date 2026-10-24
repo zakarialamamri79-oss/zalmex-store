@@ -475,7 +475,7 @@ function renderAllOrders() {
   const q = $("orderSearch").value.trim().toLowerCase();
   const filter = $("statusFilter").value.toLowerCase();
   const filtered = orders.filter(o => {
-    const haystack = [o.order_number,o.customer_name,o.phone,o.wilaya,o.municipality]
+    const haystack = [o.order_number,o.customer_name,o.phonne,o.wilaya,o.municipality]
       .join(" ").toLowerCase();
     return haystack.includes(q) && (!filter ||
       String(o.status ?? "").toLowerCase() === filter);
@@ -483,8 +483,17 @@ function renderAllOrders() {
   $("allOrders").innerHTML = filtered.length ? filtered.map(o => `
     <tr>
       <td class="order-number">${escapeHTML(o.order_number || ("#"+o.id))}</td>
-      <td><div class="customer">${escapeHTML(o.customer_name || "—")}</div>
-      <div class="muted">${escapeHTML(o.phone || "")}</div></td>
+      <td>
+  <div class="customer">${escapeHTML(o.customer_name || "—")}</div>
+  <div style="margin-top:8px">
+    ${o.phonne ? `
+      <a href="tel:${escapeHTML(o.phonne)}"
+         style="display:inline-block;background:#16a34a;color:white;padding:8px 12px;border-radius:8px;text-decoration:none;font-weight:bold">
+        📞 اتصل بالزبون
+      </a>
+    ` : '<span class="muted">لا يوجد رقم هاتف</span>'}
+  </div>
+</td>
       <td>${escapeHTML(o.wilaya || "—")}</td>
       <td>${escapeHTML(o.municipality || "—")}</td>
       <td class="amount">${money(o.total)}</td>
