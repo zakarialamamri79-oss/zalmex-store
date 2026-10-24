@@ -690,7 +690,9 @@ $("productForm").addEventListener("submit", async event => {
       return;
     }
 
-    $("productMessage").textContent = "تم حفظ المنتج بنجاح.";
+    if (!$("productMessage").textContent.includes("تم حفظ المنتج بنجاح")) {
+  $("productMessage").textContent = "عدد المنتجات: " + filtered.length;
+}
     cancelProduct();
     await loadProducts();
   } catch (error) {
