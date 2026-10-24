@@ -611,7 +611,8 @@ function showPage(page) {
   $("pageSubtitle").textContent = info[1];
   $("dashboardPage").classList.toggle("hidden",page !== "dashboard");
   $("ordersPage").classList.toggle("hidden",page !== "orders");
-  $("placeholderPage").classList.toggle("hidden",!placeholders[page]);
+  $("productsPage").classList.toggle("hidden",page !== "products");
+  $("placeholderPage").classList.toggle("hidden",!placeholders[page] || page === "products");
   document.querySelectorAll("[data-page]").forEach(btn =>
     btn.classList.toggle("active",btn.dataset.page === page));
   if (placeholders[page]) {
