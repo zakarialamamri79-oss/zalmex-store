@@ -631,7 +631,9 @@ function renderProducts() {
     : '<tr><td colspan="5" class="empty">لا توجد منتجات.</td></tr>';
 
   $("productMessage").textContent =
-    "عدد المنتجات: " + filtered.length;
+    $("productMessage").textContent === "تم حفظ المنتج بنجاح."
+      ? "تم حفظ المنتج بنجاح."
+      : "عدد المنتجات: " + filtered.length;
 }
 
 function editProduct(id) {
