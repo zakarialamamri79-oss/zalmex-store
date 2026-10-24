@@ -692,6 +692,7 @@ $("productForm").addEventListener("submit", async event => {
 
     cancelProduct();
     await loadProducts();
+    $("productMessage").textContent = "تم حفظ المنتج بنجاح.";
   } catch (error) {
     $("productMessage").textContent =
       "حدث خطأ أثناء حفظ المنتج: " + error.message;
