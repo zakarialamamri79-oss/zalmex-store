@@ -333,9 +333,17 @@ border-radius:10px}
       <input class="search" id="productCategory"
         maxlength="100" placeholder="مثال: إلكترونيات">
 
-      <label for="productImage">رابط الصورة</label>
-      <input class="search" id="productImage"
-        type="url" placeholder="https://...">
+      
+<label for="productFile">صور المنتج</label>
+<div style="border:2px dashed #c7d2fe;border-radius:14px;padding:18px;text-align:center;background:#f8faff;margin:8px 0 14px">
+  <div style="font-size:32px">📸</div>
+  <p style="margin:8px 0;color:#4f46e5;font-weight:700">اختر صورة من هاتفك</p>
+  <input id="productFile" type="file" accept="image/*" style="width:100%">
+  <img id="productImagePreview" alt="معاينة صورة المنتج" style="display:none;width:150px;height:150px;object-fit:contain;margin:14px auto 0;border-radius:12px">
+</div>
+<input class="search" id="productImage" type="url"
+  placeholder="رابط الصورة، إن وجد" style="display:none">
+
 
       <label for="productSku">رمز المنتج SKU</label>
       <input class="search" id="productSku"
