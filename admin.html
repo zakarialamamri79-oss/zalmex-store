@@ -832,6 +832,47 @@ document.querySelectorAll("[data-page]").forEach(btn =>
   btn.addEventListener("click",() => showPage(btn.dataset.page)));
 document.querySelectorAll("[data-goto]").forEach(btn =>
   btn.addEventListener("click",() => showPage(btn.dataset.goto)));
+  
+let selectedProductImageFile = null;
+let productImagePreviewUrl = null;
+
+$("productFile").addEventListener("change", function () {
+  const file = this.files && this.files[0];
+  const preview = $("productImagePreview");
+
+  if (productImagePreviewUrl) {
+    URL.revokeObjectURL(productImagePreviewUrl);
+    productImagePreviewUrl = null;
+  }
+
+  selectedProductImageFile = null;
+
+  if (!file) {
+    preview.style.display = "none";
+    preview.removeAttribute("src");
+    return;
+  }
+
+  if (!file.type.startsWith("image/")) {
+    alert("اختار ملف صورة صالح.");
+    this.value = "";
+    preview.style.display = "none";
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    alert("الصورة كبيرة. اختار صورة أقل من 5 ميغابايت.");
+    this.value = "";
+    preview.style.display = "none";
+    return;
+  }
+
+  selectedProductImageFile = file;
+  productImagePreviewUrl = URL.createObjectURL(file);
+  preview.src = productImagePreviewUrl;
+  preview.style.display = "block";
+});
+
 </script>
 </body>
 </html>
