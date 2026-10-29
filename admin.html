@@ -351,7 +351,23 @@ border-radius:10px}
       <label for="productSku">رمز المنتج SKU</label>
       <input class="search" id="productSku"
         maxlength="100" placeholder="اختياري">
+<hr style="margin:20px 0;border-color:#e5e7eb">
 
+<h3>خيارات المنتج</h3>
+<p style="color:#777;font-size:13px">
+  أضف الخيارات الخاصة بهذا المنتج فقط، مثل اللون أو الحجم أو الشكل.
+</p>
+
+<div id="productOptionsEditor"></div>
+
+<button
+  class="secondary"
+  type="button"
+  onclick="addProductOption()"
+  style="margin:10px 0"
+>
+  + إضافة مجموعة خيارات
+</button>
       <p>
         <label>
           <input id="productActive" type="checkbox" checked>
