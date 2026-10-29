@@ -701,8 +701,13 @@ function editProduct(id) {
   $("productName").focus();
 }
 
-$("productForm").addEventListener("submit", async event => {
-  
+  $("productForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const button = $("productForm").querySelector(
+    'button[type="submit"]'
+  );
+
   button.disabled = true;
   button.textContent = "جاري الحفظ...";
 
