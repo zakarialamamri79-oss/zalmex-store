@@ -738,6 +738,7 @@ $("productForm").addEventListener("submit", async event => {
       category: $("productCategory").value.trim() || null,
       image_url: $("productImage").value.trim() || null,
       sku: $("productSku").value.trim() || null,
+      product_options: getProductOptions(),
       is_active: $("productActive").checked
     };
 
