@@ -685,9 +685,7 @@ function editProduct(id) {
 }
 
 $("productForm").addEventListener("submit", async event => {
-  event.preventDefault();
-
-  const button = $("productForm").querySelector('button[type="submit"]');
+  
   button.disabled = true;
   button.textContent = "جاري الحفظ...";
 
