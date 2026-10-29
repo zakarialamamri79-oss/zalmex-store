@@ -694,6 +694,7 @@ function editProduct(id) {
   $("productCategory").value = p.category || "";
   $("productImage").value = p.image_url || "";
   $("productSku").value = p.sku || "";
+  renderProductOptions(p.product_options || []);
   $("productActive").checked = Boolean(p.is_active);
 
   $("productForm").classList.remove("hidden");
