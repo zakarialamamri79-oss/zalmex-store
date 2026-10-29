@@ -868,7 +868,78 @@ document.querySelectorAll("[data-page]").forEach(btn =>
   btn.addEventListener("click",() => showPage(btn.dataset.page)));
 document.querySelectorAll("[data-goto]").forEach(btn =>
   btn.addEventListener("click",() => showPage(btn.dataset.goto)));
-  
+  function addProductOption(name = "", values = "") {
+  const editor = $("productOptionsEditor");
+
+  const group = document.createElement("div");
+  group.style.cssText =
+    "border:1px solid #ddd;border-radius:12px;padding:12px;margin:12px 0";
+
+  group.innerHTML = `
+    <label>اسم مجموعة الخيارات</label>
+    <input class="search option-group-name"
+      maxlength="100"
+      placeholder="مثال: اللون أو الحجم"
+      style="width:100%;margin:6px 0 12px">
+
+    <label>القيم المتاحة</label>
+    <input class="search option-group-values"
+      maxlength="1000"
+      placeholder="مثال: أسود، أبيض، فضي"
+      style="width:100%;margin:6px 0 12px">
+
+    <button type="button" class="secondary option-remove">
+      حذف مجموعة الخيارات
+    </button>
+  `;
+
+  group.querySelector(".option-group-name").value = name;
+  group.querySelector(".option-group-values").value = values;
+
+  group.querySelector(".option-remove").addEventListener("click", () => {
+    group.remove();
+  });
+
+  editor.appendChild(group);
+}
+
+function getProductOptions() {
+  const groups = document.querySelectorAll(
+    "#productOptionsEditor > div"
+  );
+
+  const options = [];
+
+  groups.forEach(group => {
+    const name = group.querySelector(".option-group-name").value.trim();
+    const valuesText = group.querySelector(".option-group-values").value;
+
+    const values = valuesText
+      .split(/[,،\n]/)
+      .map(value => value.trim())
+      .filter(Boolean);
+
+    if (name && values.length) {
+      options.push({ name, values });
+    }
+  });
+
+  return options;
+}
+
+function renderProductOptions(options = []) {
+  const editor = $("productOptionsEditor");
+  editor.innerHTML = "";
+
+  options.forEach(option => {
+    addProductOption(
+      option.name || "",
+      Array.isArray(option.values)
+        ? option.values.join("، ")
+        : ""
+    );
+  });
+}
 let selectedProductImageFile = null;
 let productImagePreviewUrl = null;
 
