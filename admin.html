@@ -778,36 +778,15 @@ $("menuBtn")?.addEventListener("click", () => {
   $("sidebar").classList.toggle("open");
 });
 // Login
-async function loginAdmin() {
-  const email = $("loginEmail")?.value.trim();
-  const password = $("loginPassword")?.value;
-
-  if (!email || !password) {
-    alert("أدخل البريد الإلكتروني وكلمة المرور");
-    return;
-  }
-
-  const { data, error } = await db.auth.signInWithPassword({
-    email,
-    password
-  });
-
-  if (error) {
-    alert("فشل تسجيل الدخول: " + error.message);
-    return;
-  }
-
-  showAdmin();
-}
-
 function showAdmin() {
-  if ($("loginScreen")) $("loginScreen").style.display = "none";
-  if ($("adminApp")) $("adminApp").style.display = "flex";
+  $("loginScreen").classList.add("hidden");
+  $("app").classList.remove("hidden");
+
+  $("userEmail").textContent = "حساب الإدارة";
 
   showPage("dashboard");
   loadDashboard();
 }
-
 async function logoutAdmin() {
   const { error } = await db.auth.signOut();
 
