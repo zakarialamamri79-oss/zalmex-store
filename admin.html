@@ -997,11 +997,12 @@ async function saveProduct() {
   button.disabled = false;
   button.textContent = "حفظ المنتج";
 }
-
-if ($("saveProductBtn")) {
-  $("saveProductBtn").addEventListener("click", saveProduct);
+if ($("productForm")) {
+  $("productForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    saveProduct();
+  });
 }
-
 /* تعديل أو تفعيل/إيقاف المنتج */
 
 document.addEventListener("click", async event => {
