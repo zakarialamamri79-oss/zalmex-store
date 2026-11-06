@@ -787,6 +787,10 @@ function showAdmin() {
   showPage("dashboard");
   loadDashboard();
 }
+  $("loginForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  loginAdmin();
+});
 async function logoutAdmin() {
   const { error } = await db.auth.signOut();
 
