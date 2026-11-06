@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZALMEX | لوحة الإدارة</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root {
+  --primary:#6558e8;
+  --secondary:#8b5cf6;
+  --bg:#f4f6fb;
+  --white:#fff;
+  --text:#172033;
+  --muted:#738096;
+  --border:#e7ebf2;
+  --green:#119b70;
+  --red:#dc4c64;
+  --gold:#d28a19;
+}
+
+* {
+  box-sizing:border-box;
+}
+
+body {
+  margin:0;
+  background:var(--bg);
+  font-family:Arial,Tahoma,sans-serif;
+  color:var(--text);
+}
+
+button,input,select,textarea {
+  font:inherit;
+}
+
+button {
+  cursor:pointer;
+}
+
+.hidden {
+  display:none!important;
+}
+
+.login-screen {
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  background:linear-gradient(135deg,#17172f,#5144bb,#8a5cf6);
+}
+
+.login-card {
+  background:white;
+  width:100%;
+  max-width:420px;
+  padding:28px;
+  border-radius:22px;
+  box-shadow:0 20px 60px #1114;
+}
+
+.logo {
+  font-size:30px;
+  font-weight:900;
+  letter-spacing:2px;
+  color:var(--primary);
+}
+
+.login-card h2 {
+  margin-top:15px;
+}
+
+.field {
+  display:grid;
+  gap:7px;
+  margin:14px 0;
+}
+
+.field label {
+  font-size:13px;
+  font-weight:bold;
+}
+
+input,select,textarea {
+  width:100%;
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  outline:none;
+  background:white;
+}
+
+input:focus,select:focus,textarea:focus {
+  border-color:var(--primary);
+}
+
+.btn {
+  border:0;
+  border-radius:11px;
+  padding:11px 16px;
+  background:var(--primary);
+  color:white;
+  font-weight:bold;
+}
+
+.btn.secondary {
+  background:#eeedff;
+  color:#5145c8;
+}
+
+.btn.green {
+  background:var(--green);
+}
+
+.btn.red {
+  background:var(--red);
+}
+
+.app {
+  min-height:100vh;
+}
+
+.sidebar {
+  position:fixed;
+  right:0;
+  top:0;
+  bottom:0;
+  width:250px;
+  background:#17182d;
+  color:white;
+  padding:22px 15px;
+  overflow-y:auto;
+  z-index:10;
+}
+
+.side-brand {
+  padding:5px 12px 22px;
+  border-bottom:1px solid #ffffff18;
+  margin-bottom:18px;
+}
+
+.side-brand .logo {
+  color:white;
+}
+
+.side-brand small {
+  display:block;
+  color:#aeb2ca;
+  margin-top:5px;
+}
+
+.nav-label {
+  font-size:11px;
+  color:#858ba8;
+  padding:12px;
+}
+
+.nav button {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  border:0;
+  background:transparent;
+  color:#c8cbe0;
+  text-align:right;
+  padding:12px;
+  border-radius:10px;
+  margin:3px 0;
+}
+
+.nav button.active,
+.nav button:hover {
+  background:#ffffff16;
+  color:white;
+}
+
+.nav-icon {
+  width:25px;
+  text-align:center;
+}
+
+.main {
+  margin-right:250px;
+  padding:24px;
+  max-width:1600px;
+}
+
+.topbar {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:22px;
+}
+
+h1 {
+  font-size:24px;
+  margin:0;
+}
+
+.sub {
+  color:var(--muted);
+  font-size:13px;
+  margin-top:5px;
+}
+
+.user-chip {
+  background:white;
+  padding:10px 13px;
+  border-radius:12px;
+  font-size:13px;
+}
+
+.page {
+  display:none;
+}
+
+.page.active {
+  display:block;
+}
+
+.panel {
+  background:white;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:18px;
+  box-shadow:0 8px 28px #1e28460b;
+}
+
+.panel-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:15px;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+  margin-bottom:18px;
+}
+
+.stat {
+  background:white;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:18px;
+}
+
+.stat-value {
+  font-size:25px;
+  font-weight:900;
+  margin-top:12px;
+}
+
+.stat-foot {
+  font-size:12px;
+  color:var(--muted);
+  margin-top:5px;
+}
+
+.table-wrap {
+  overflow-x:auto;
+}
+
+table {
+  width:100%;
+  border-collapse:collapse;
+  min-width:650px;
+}
+
+th,td {
+  text-align:right;
+  padding:12px 10px;
+  border-bottom:1px solid var(--border);
+  font-size:13px;
+}
+
+th {
+  background:#fafbfe;
+  color:var(--muted);
+}
+
+.notice {
+  padding:13px;
+  border-radius:12px;
+  background:#f2f1ff;
+  color:#5145b9;
+  font-size:13px;
+  line-height:1.8;
+}
+
+.actions {
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+}
+
+.mobile-menu {
+  display:none;
+}
+
+@media(max-width:900px) {
+  .sidebar {
+    width:220px;
+  }
+
+  .main {
+    margin-right:220px;
+  }
+
+  .grid {
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:650px) {
+  .sidebar {
+    transform:translateX(100%);
+    width:270px;
+    transition:.2s;
+  }
+
+  .sidebar.open {
+    transform:translateX(0);
+  }
+
+  .main {
+    margin:0;
+    padding:14px;
+  }
+
+  .mobile-menu {
+    display:inline-block;
+  }
+
+  .grid {
+    gap:9px;
+  }
+
+  .stat {
+    padding:13px;
+  }
+
+  .stat-value {
+    font-size:21px;
+  }
+
+  h1 {
+    font-size:20px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+
+    <div class="logo">ZALMEX</div>
+
+    <h2>تسجيل الدخول</h2>
+
+    <p class="sub">
+      مرحباً بك في لوحة إدارة متجرك.
+    </p>
+
+    <form id="loginForm">
+
+      <div class="field">
+        <label>البريد الإلكتروني</label>
+        <input id="loginEmail" type="email" required>
+      </div>
+
+      <div class="field">
+        <label>كلمة المرور</label>
+        <input id="loginPassword" type="password" required>
+      </div>
+
+      <button class="btn" type="submit" style="width:100%">
+        دخول
+      </button>
+
+    </form>
+
+    <p id="loginError" style="color:red;font-size:13px"></p>
+
+  </div>
+</div>
+
+<div id="app" class="app hidden">
+
+  <aside id="sidebar" class="sidebar">
+
+    <div class="side-brand">
+      <div class="logo">ZALMEX</div>
+      <small>نظام إدارة التجارة</small>
+    </div>
+
+    <div class="nav-label">القائمة الرئيسية</div>
+
+    <nav class="nav">
+
+      <button class="active" data-page="dashboard">
+        <span class="nav-icon">⌂</span>
+        الرئيسية
+      </button>
+
+      <button data-page="orders">
+        <span class="nav-icon">▤</span>
+        الطلبات
+      </button>
+
+      <button data-page="products">
+        <span class="nav-icon">▣</span>
+        المنتجات
+      </button>
+
+      <button data-page="warehouse">
+        <span class="nav-icon">▦</span>
+        المستودع والعمليات
+      </button>
+
+      <div class="nav-label">إدارة النشاط</div>
+
+      <button data-page="shipping">
+        <span class="nav-icon">🚚</span>
+        شركات التوصيل
+      </button>
+
+      <button data-page="marketing">
+        <span class="nav-icon">◉</span>
+        التسويق والبيكسل
+      </button>
+
+      <button data-page="analytics">
+        <span class="nav-icon">▥</span>
+        التحليلات
+      </button>
+
+      <button data-page="intelligence">
+        <span class="nav-icon">✦</span>
+        ذكاء التجارة
+      </button>
+
+      <button data-page="settings">
+        <span class="nav-icon">⚙</span>
+        الإعدادات
+      </button>
+
+    </nav>
+
+    <button id="logoutBtn" class="btn" style="width:100%;margin-top:25px;background:#34364e">
+      تسجيل الخروج
+    </button>
+
+  </aside>
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div style="display:flex;gap:10px;align-items:center">
+
+        <button class="btn secondary mobile-menu" id="menuBtn">
+          ☰
+        </button>
+
+        <div>
+          <h1 id="pageTitle">الرئيسية</h1>
+          <div class="sub" id="pageSubtitle">
+            نظرة عامة على نشاط ZALMEX
+          </div>
+        </div>
+
+      </div>
+
+      <div class="user-chip" id="userEmail">
+        حساب الإدارة
+      </div>
+
+    </header>
+
+<!-- DASHBOARD -->
+
+<section id="dashboard" class="page active">
+
+  <div class="grid">
+
+    <div class="stat">
+      <div>إجمالي المنتجات 📦</div>
+      <div class="stat-value" id="statProducts">0</div>
+      <div class="stat-foot">المنتجات المسجلة</div>
+    </div>
+
+    <div class="stat">
+      <div>إجمالي الطلبات 🛒</div>
+      <div class="stat-value" id="statOrders">0</div>
+      <div class="stat-foot">كل الطلبات</div>
+    </div>
+
+    <div class="stat">
+      <div>طلبات الانتظار ⏳</div>
+      <div class="stat-value" id="statPending">0</div>
+      <div class="stat-foot">تحتاج للمراجعة</div>
+    </div>
+
+    <div class="stat">
+      <div>قيمة الطلبات 💰</div>
+      <div class="stat-value" id="statRevenue">0</div>
+      <div class="stat-foot">بالدينار الجزائري</div>
+    </div>
+
+  </div>
+
+  <div class="panel">
+
+    <div class="panel-head">
+      <h2>أحدث الطلبات</h2>
+      <button class="btn secondary" data-goto="orders">
+        عرض كل الطلبات
+      </button>
+    </div>
+
+    <div id="recentOrders" class="table-wrap">
+      جاري تحميل البيانات...
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ORDERS -->
+
+<section id="orders" class="page">
+
+  <div class="panel">
+
+    <div class="panel-head">
+      <div>
+        <h2>إدارة الطلبات</h2>
+        <div class="sub">مراجعة الطلبات ومعلومات الزبائن</div>
+      </div>
+
+      <button class="btn secondary" id="refreshOrders">
+        تحديث
+      </button>
+    </div>
+
+    <div class="actions" style="margin-bottom:15px">
+
+      <input
+        id="orderSearch"
+        placeholder="ابحث بالاسم أو الهاتف أو رقم الطلب"
+      >
+
+      <select id="orderFilter" style="max-width:180px">
+        <option value="">كل الحالات</option>
+        <option value="pending">قيد الانتظار</option>
+        <option value="confirmed">مؤكد</option>
+        <option value="cancelled">ملغى</option>
+      </select>
+
+    </div>
+
+    <div id="ordersTable" class="table-wrap">
+      جاري تحميل الطلبات...
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- PRODUCTS -->
+
+<section id="products" class="page">
+
+  <div class="panel">
+
+    <div class="panel-head">
+      <div>
+        <h2 id="productFormTitle">إضافة منتج جديد</h2>
+        <div class="sub">إدارة منتجات ZALMEX</div>
+      </div>
+
+      <button class="btn secondary" id="resetProduct">
+        تفريغ الحقول
+      </button>
+    </div>
+
+    <form id="productForm">
+
+      <input type="hidden" id="productId">
+
+      <div class="form-grid">
+
+        <div class="field">
+          <label>اسم المنتج بالعربية *</label>
+          <input id="productName" required>
+        </div>
+
+        <div class="field">
+          <label>اسم المنتج بالفرنسية</label>
+          <input id="productNameFr">
+        </div>
+
+        <div class="field">
+          <label>السعر بالدينار *</label>
+          <input id="productPrice" type="number" min="0" required>
+        </div>
+
+        <div class="field">
+          <label>السعر قبل التخفيض</label>
+          <input id="productCompare" type="number" min="0">
+        </div>
+
+        <div class="field">
+          <label>الكمية</label>
+          <input id="productStock" type="number" min="0" value="0">
+        </div>
+
+        <div class="field">
+          <label>رمز المنتج SKU</label>
+          <input id="productSku" placeholder="ZLM-0001">
+        </div>
+
+        <div class="field">
+          <label>التصنيف</label>
+          <select id="productCategory">
+            <option value="">بدون تصنيف</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>صورة المنتج</label>
+          <input id="productFile" type="file" accept="image/*">
+        </div>
+
+        <div class="field full">
+          <label>وصف المنتج</label>
+          <textarea id="productDescription"></textarea>
+        </div>
+
+        <div class="field full">
+          <label>خيارات المنتج بصيغة JSON</label>
+          <textarea
+            id="productOptions"
+            placeholder='[{"name":"اللون","values":["أسود","أبيض"]}]'
+          ></textarea>
+          <small class="sub">
+            كل منتج عنده خياراته الخاصة.
+          </small>
+        </div>
+
+        <div class="field">
+          <label>
+            <input
+              id="productActive"
+              type="checkbox"
+              checked
+              style="width:auto"
+            >
+            المنتج نشط
+          </label>
+        </div>
+
+      </div>
+
+      <button class="btn" type="submit" id="saveProductBtn">
+        حفظ المنتج
+      </button>
+
+      <p id="productMessage" class="sub"></p>
+
+    </form>
+
+  </div>
+
+
+  <div class="panel">
+
+    <div class="panel-head">
+      <h2>قائمة المنتجات</h2>
+
+      <button class="btn secondary" id="refreshProducts">
+        تحديث
+      </button>
+    </div>
+
+    <div id="productsTable" class="table-wrap">
+      جاري تحميل المنتجات...
+    </div>
+
+  </div>
+
+</section>
+
+  </main>
+</div>
+
+<script>
+const SUPABASE_URL = "https://jblehthxfyeseqbzhijy.supabase.co";
+const SUPABASE_KEY = "sb_publishable_6JRg31NgFFiry4ah_qxBvw_9ffoph9s";
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+const $ = id => document.getElementById(id);
+
+// ===============================
+// ZALMEX ADMIN - PART 3
+// Navigation and login
+// ===============================
+
+let currentPage = "dashboard";
+
+function showPage(pageId) {
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.remove("active");
+  });
+
+  const target = $(pageId);
+  if (target) target.classList.add("active");
+
+  document.querySelectorAll(".nav-btn").forEach(btn => {
+    btn.classList.toggle(
+      "active",
+      btn.dataset.page === pageId
+    );
+  });
+
+  currentPage = pageId;
+
+  const titles = {
+    dashboard: "الرئيسية",
+    orders: "الطلبات",
+    products: "المنتجات",
+    warehouse: "المخزون والمستودع",
+    shipping: "شركات التوصيل",
+    marketing: "بيكسل الإعلانات",
+    analytics: "التحليلات",
+    intelligence: "ذكاء التجارة واتخاذ القرارات",
+    settings: "الإعدادات"
+  };
+
+  if ($("pageTitle")) {
+    $("pageTitle").textContent = titles[pageId] || "ZALMEX";
+  }
+}
+
+document.querySelectorAll(".nav-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    showPage(btn.dataset.page);
+  });
+});
+
+// Login
+async function loginAdmin() {
+  const email = $("loginEmail")?.value.trim();
+  const password = $("loginPassword")?.value;
+
+  if (!email || !password) {
+    alert("أدخل البريد الإلكتروني وكلمة المرور");
+    return;
+  }
+
+  const { data, error } = await db.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    alert("فشل تسجيل الدخول: " + error.message);
+    return;
+  }
+
+  showAdmin();
+}
+
+function showAdmin() {
+  if ($("loginScreen")) $("loginScreen").style.display = "none";
+  if ($("adminApp")) $("adminApp").style.display = "flex";
+
+  showPage("dashboard");
+  loadDashboard();
+}
+
+async function logoutAdmin() {
+  const { error } = await db.auth.signOut();
+
+  if (error) {
+    alert("تعذر تسجيل الخروج: " + error.message);
+    return;
+  }
+
+  location.reload();
+}
+
+// Restore existing session
+async function checkAdminSession() {
+  const { data, error } = await db.auth.getSession();
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  if (data.session) {
+    showAdmin();
+  }
+}
+
+// Dashboard
+async function loadDashboard() {
+  try {
+    const [productsResult, ordersResult] = await Promise.all([
+      db.from("products").select("id", { count: "exact", head: true }),
+      db.from("orders").select("id,status,total")
+    ]);
+
+    if (productsResult.error) throw productsResult.error;
+    if (ordersResult.error) throw ordersResult.error;
+
+    const orders = ordersResult.data || [];
+
+    const totalOrders = orders.length;
+    const pendingOrders = orders.filter(o => o.status === "pending").length;
+    const totalSales = orders
+      .filter(o => o.status === "confirmed" || o.status === "delivered")
+      .reduce((sum, o) => sum + Number(o.total || 0), 0);
+
+    if ($("statProducts")) $("statProducts").textContent =
+      productsResult.count ?? 0;
+
+    if ($("statOrders")) $("statOrders").textContent =
+      totalOrders;
+
+    if ($("statPending")) $("statPending").textContent =
+      pendingOrders;
+
+    if ($("statSales")) $("statSales").textContent =
+      totalSales.toLocaleString("fr-DZ") + " دج";
+
+  } catch (error) {
+    console.error("Dashboard error:", error);
+  }
+}
+
+// Start
+document.addEventListener("DOMContentLoaded", () => {
+  checkAdminSession();
+});
+
+</script>
+
+</body>
+</html>
