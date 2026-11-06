@@ -723,8 +723,19 @@ const $ = id => document.getElementById(id);
 // ZALMEX ADMIN - PART 3
 // Navigation and login
 // ===============================
-
 let currentPage = "dashboard";
+
+const pageInfo = {
+  dashboard: ["الرئيسية", "نظرة عامة على نشاط ZALMEX"],
+  orders: ["الطلبات", "إدارة طلبات الزبائن"],
+  products: ["المنتجات", "إدارة منتجات المتجر"],
+  warehouse: ["المستودع والعمليات", "إدارة المخزون"],
+  shipping: ["شركات التوصيل", "إدارة شركات الشحن"],
+  marketing: ["التسويق والبيكسل", "متابعة الحملات الإعلانية"],
+  analytics: ["التحليلات", "إحصائيات نشاط المتجر"],
+  intelligence: ["ذكاء التجارة واتخاذ القرارات", "المستشار الذكي لـ ZALMEX"],
+  settings: ["الإعدادات", "إعدادات المتجر"]
+};
 
 function showPage(pageId) {
   document.querySelectorAll(".page").forEach(page => {
@@ -732,40 +743,40 @@ function showPage(pageId) {
   });
 
   const target = $(pageId);
-  if (target) target.classList.add("active");
+  if (!target) {
+    alert("هذه الصفحة لم تتم إضافتها بعد");
+    return;
+  }
 
-  document.querySelectorAll(".nav-btn").forEach(btn => {
-    btn.classList.toggle(
-      "active",
-      btn.dataset.page === pageId
-    );
+  target.classList.add("active");
+
+  document.querySelectorAll(".nav button[data-page]").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.page === pageId);
   });
 
   currentPage = pageId;
 
-  const titles = {
-    dashboard: "الرئيسية",
-    orders: "الطلبات",
-    products: "المنتجات",
-    warehouse: "المخزون والمستودع",
-    shipping: "شركات التوصيل",
-    marketing: "بيكسل الإعلانات",
-    analytics: "التحليلات",
-    intelligence: "ذكاء التجارة واتخاذ القرارات",
-    settings: "الإعدادات"
-  };
+  $("pageTitle").textContent = pageInfo[pageId][0];
+  $("pageSubtitle").textContent = pageInfo[pageId][1];
 
-  if ($("pageTitle")) {
-    $("pageTitle").textContent = titles[pageId] || "ZALMEX";
-  }
+  $("sidebar")?.classList.remove("open");
 }
 
-document.querySelectorAll(".nav-btn").forEach(btn => {
+document.querySelectorAll(".nav button[data-page]").forEach(btn => {
   btn.addEventListener("click", () => {
     showPage(btn.dataset.page);
   });
 });
 
+document.querySelectorAll("[data-goto]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    showPage(btn.dataset.goto);
+  });
+});
+
+$("menuBtn")?.addEventListener("click", () => {
+  $("sidebar").classList.toggle("open");
+});
 // Login
 async function loginAdmin() {
   const email = $("loginEmail")?.value.trim();
