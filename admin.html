@@ -1093,12 +1093,11 @@ async function loadOrders() {
 function renderOrders() {
   const table = $("ordersTable");
   if (!table) return;
-
-  const search = ($("ordersSearch")?.value || "")
+  const search = ($("orderSearch")?.value || "")
     .trim()
     .toLowerCase();
 
-  const filter = $("ordersFilter")?.value || "all";
+const filter = $("orderFilter")?.value || "";
 
   const filtered = allOrders.filter(order => {
     const text = [
