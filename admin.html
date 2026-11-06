@@ -3,14 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#17182d">
 <title>ZALMEX | لوحة الإدارة</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 :root {
   --primary:#6558e8;
-  --secondary:#8b5cf6;
   --bg:#f4f6fb;
   --white:#fff;
   --text:#172033;
@@ -18,31 +17,17 @@
   --border:#e7ebf2;
   --green:#119b70;
   --red:#dc4c64;
-  --gold:#d28a19;
 }
-
-* {
-  box-sizing:border-box;
-}
-
+* { box-sizing:border-box; }
 body {
   margin:0;
   background:var(--bg);
   font-family:Arial,Tahoma,sans-serif;
   color:var(--text);
 }
-
-button,input,select,textarea {
-  font:inherit;
-}
-
-button {
-  cursor:pointer;
-}
-
-.hidden {
-  display:none!important;
-}
+button,input,select,textarea { font:inherit; }
+button { cursor:pointer; }
+.hidden { display:none!important; }
 
 .login-screen {
   min-height:100vh;
@@ -52,7 +37,6 @@ button {
   padding:20px;
   background:linear-gradient(135deg,#17172f,#5144bb,#8a5cf6);
 }
-
 .login-card {
   background:white;
   width:100%;
@@ -61,29 +45,21 @@ button {
   border-radius:22px;
   box-shadow:0 20px 60px #1114;
 }
-
 .logo {
   font-size:30px;
   font-weight:900;
   letter-spacing:2px;
   color:var(--primary);
 }
-
-.login-card h2 {
-  margin-top:15px;
-}
-
 .field {
   display:grid;
   gap:7px;
   margin:14px 0;
 }
-
 .field label {
   font-size:13px;
   font-weight:bold;
 }
-
 input,select,textarea {
   width:100%;
   padding:12px;
@@ -92,11 +68,6 @@ input,select,textarea {
   outline:none;
   background:white;
 }
-
-input:focus,select:focus,textarea:focus {
-  border-color:var(--primary);
-}
-
 .btn {
   border:0;
   border-radius:11px;
@@ -105,23 +76,12 @@ input:focus,select:focus,textarea:focus {
   color:white;
   font-weight:bold;
 }
-
 .btn.secondary {
   background:#eeedff;
   color:#5145c8;
 }
-
-.btn.green {
-  background:var(--green);
-}
-
-.btn.red {
-  background:var(--red);
-}
-
-.app {
-  min-height:100vh;
-}
+.btn.green { background:var(--green); }
+.btn.red { background:var(--red); }
 
 .sidebar {
   position:fixed;
@@ -135,29 +95,22 @@ input:focus,select:focus,textarea:focus {
   overflow-y:auto;
   z-index:10;
 }
-
 .side-brand {
   padding:5px 12px 22px;
   border-bottom:1px solid #ffffff18;
   margin-bottom:18px;
 }
-
-.side-brand .logo {
-  color:white;
-}
-
+.side-brand .logo { color:white; }
 .side-brand small {
   display:block;
   color:#aeb2ca;
   margin-top:5px;
 }
-
 .nav-label {
   font-size:11px;
   color:#858ba8;
   padding:12px;
 }
-
 .nav button {
   display:flex;
   align-items:center;
@@ -171,24 +124,20 @@ input:focus,select:focus,textarea:focus {
   border-radius:10px;
   margin:3px 0;
 }
-
 .nav button.active,
 .nav button:hover {
   background:#ffffff16;
   color:white;
 }
-
 .nav-icon {
   width:25px;
   text-align:center;
 }
-
 .main {
   margin-right:250px;
   padding:24px;
   max-width:1600px;
 }
-
 .topbar {
   display:flex;
   align-items:center;
@@ -196,32 +145,21 @@ input:focus,select:focus,textarea:focus {
   gap:12px;
   margin-bottom:22px;
 }
-
-h1 {
-  font-size:24px;
-  margin:0;
-}
-
+h1 { font-size:24px; margin:0; }
+h2 { font-size:18px; }
 .sub {
   color:var(--muted);
   font-size:13px;
   margin-top:5px;
 }
-
 .user-chip {
   background:white;
   padding:10px 13px;
   border-radius:12px;
   font-size:13px;
 }
-
-.page {
-  display:none;
-}
-
-.page.active {
-  display:block;
-}
+.page { display:none; }
+.page.active { display:block; }
 
 .panel {
   background:white;
@@ -231,7 +169,6 @@ h1 {
   margin-bottom:18px;
   box-shadow:0 8px 28px #1e28460b;
 }
-
 .panel-head {
   display:flex;
   justify-content:space-between;
@@ -239,55 +176,55 @@ h1 {
   gap:10px;
   margin-bottom:15px;
 }
-
 .grid {
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
   gap:14px;
   margin-bottom:18px;
 }
-
 .stat {
   background:white;
   border:1px solid var(--border);
   border-radius:16px;
   padding:18px;
 }
-
 .stat-value {
   font-size:25px;
   font-weight:900;
   margin-top:12px;
 }
-
 .stat-foot {
   font-size:12px;
   color:var(--muted);
   margin-top:5px;
 }
-
-.table-wrap {
-  overflow-x:auto;
-}
-
+.table-wrap { overflow-x:auto; }
 table {
   width:100%;
   border-collapse:collapse;
   min-width:650px;
 }
-
 th,td {
   text-align:right;
   padding:12px 10px;
   border-bottom:1px solid var(--border);
   font-size:13px;
 }
-
 th {
   background:#fafbfe;
   color:var(--muted);
 }
-
+.actions {
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+}
+.form-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:0 14px;
+}
+.field.full { grid-column:1/-1; }
 .notice {
   padding:13px;
   border-radius:12px;
@@ -296,85 +233,39 @@ th {
   font-size:13px;
   line-height:1.8;
 }
-
-.actions {
-  display:flex;
-  gap:7px;
-  flex-wrap:wrap;
-}
-
-.mobile-menu {
-  display:none;
-}
+.mobile-menu { display:none; }
 
 @media(max-width:900px) {
-  .sidebar {
-    width:220px;
-  }
-
-  .main {
-    margin-right:220px;
-  }
-
-  .grid {
-    grid-template-columns:repeat(2,1fr);
-  }
+  .sidebar { width:220px; }
+  .main { margin-right:220px; }
+  .grid { grid-template-columns:repeat(2,1fr); }
 }
-
 @media(max-width:650px) {
   .sidebar {
     transform:translateX(100%);
     width:270px;
     transition:.2s;
   }
-
-  .sidebar.open {
-    transform:translateX(0);
-  }
-
-  .main {
-    margin:0;
-    padding:14px;
-  }
-
-  .mobile-menu {
-    display:inline-block;
-  }
-
-  .grid {
-    gap:9px;
-  }
-
-  .stat {
-    padding:13px;
-  }
-
-  .stat-value {
-    font-size:21px;
-  }
-
-  h1 {
-    font-size:20px;
-  }
+  .sidebar.open { transform:translateX(0); }
+  .main { margin:0; padding:14px; }
+  .mobile-menu { display:inline-block; }
+  .grid { gap:9px; }
+  .stat { padding:13px; }
+  .stat-value { font-size:21px; }
+  h1 { font-size:20px; }
+  .form-grid { grid-template-columns:1fr; }
+  .field.full { grid-column:auto; }
 }
 </style>
 </head>
-
 <body>
-
-<div id="loginScreen" class="login-screen">
+  <div id="loginScreen" class="login-screen">
   <div class="login-card">
-
     <div class="logo">ZALMEX</div>
-
     <h2>تسجيل الدخول</h2>
-
-    <p class="sub">
-      مرحباً بك في لوحة إدارة متجرك.
-    </p>
+    <p class="sub">مرحباً بك في لوحة إدارة متجرك.</p>
 
     <form id="loginForm">
-
       <div class="field">
         <label>البريد الإلكتروني</label>
         <input id="loginEmail" type="email" required>
@@ -385,21 +276,18 @@ th {
         <input id="loginPassword" type="password" required>
       </div>
 
-      <button class="btn" type="submit" style="width:100%">
+      <button class="btn" id="loginBtn" type="submit" style="width:100%">
         دخول
       </button>
-
     </form>
 
     <p id="loginError" style="color:red;font-size:13px"></p>
-
   </div>
 </div>
 
-<div id="app" class="app hidden">
+<div id="app" class="hidden">
 
   <aside id="sidebar" class="sidebar">
-
     <div class="side-brand">
       <div class="logo">ZALMEX</div>
       <small>نظام إدارة التجارة</small>
@@ -408,307 +296,252 @@ th {
     <div class="nav-label">القائمة الرئيسية</div>
 
     <nav class="nav">
-
-      <button class="active" data-page="dashboard">
-        <span class="nav-icon">⌂</span>
-        الرئيسية
-      </button>
-
-      <button data-page="orders">
-        <span class="nav-icon">▤</span>
-        الطلبات
-      </button>
-
-      <button data-page="products">
-        <span class="nav-icon">▣</span>
-        المنتجات
-      </button>
-
-      <button data-page="warehouse">
-        <span class="nav-icon">▦</span>
-        المستودع والعمليات
-      </button>
+      <button class="active" data-page="dashboard">⌂ الرئيسية</button>
+      <button data-page="orders">▤ الطلبات</button>
+      <button data-page="products">▣ المنتجات</button>
+      <button data-page="warehouse">▦ المستودع والعمليات</button>
 
       <div class="nav-label">إدارة النشاط</div>
 
-      <button data-page="shipping">
-        <span class="nav-icon">🚚</span>
-        شركات التوصيل
-      </button>
-
-      <button data-page="marketing">
-        <span class="nav-icon">◉</span>
-        التسويق والبيكسل
-      </button>
-
-      <button data-page="analytics">
-        <span class="nav-icon">▥</span>
-        التحليلات
-      </button>
-
-      <button data-page="intelligence">
-        <span class="nav-icon">✦</span>
-        ذكاء التجارة
-      </button>
-
-      <button data-page="settings">
-        <span class="nav-icon">⚙</span>
-        الإعدادات
-      </button>
-
+      <button data-page="shipping">🚚 شركات التوصيل</button>
+      <button data-page="marketing">◉ التسويق والبيكسل</button>
+      <button data-page="analytics">▥ التحليلات</button>
+      <button data-page="intelligence">✦ ذكاء التجارة</button>
+      <button data-page="settings">⚙ الإعدادات</button>
     </nav>
 
     <button id="logoutBtn" class="btn" style="width:100%;margin-top:25px;background:#34364e">
       تسجيل الخروج
     </button>
-
   </aside>
 
   <main class="main">
 
     <header class="topbar">
-
       <div style="display:flex;gap:10px;align-items:center">
-
-        <button class="btn secondary mobile-menu" id="menuBtn">
-          ☰
-        </button>
-
+        <button class="btn secondary mobile-menu" id="menuBtn">☰</button>
         <div>
           <h1 id="pageTitle">الرئيسية</h1>
-          <div class="sub" id="pageSubtitle">
-            نظرة عامة على نشاط ZALMEX
-          </div>
+          <div class="sub" id="pageSubtitle">نظرة عامة على نشاط ZALMEX</div>
         </div>
-
       </div>
-
-      <div class="user-chip" id="userEmail">
-        حساب الإدارة
-      </div>
-
+      <div class="user-chip" id="userEmail">حساب الإدارة</div>
     </header>
 
-<!-- DASHBOARD -->
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="page active">
+      <div class="grid">
+        <div class="stat">
+          <div>إجمالي المنتجات 📦</div>
+          <div class="stat-value" id="statProducts">—</div>
+          <div class="stat-foot">المنتجات المسجلة</div>
+        </div>
 
-<section id="dashboard" class="page active">
+        <div class="stat">
+          <div>إجمالي الطلبات 🛒</div>
+          <div class="stat-value" id="statOrders">—</div>
+          <div class="stat-foot">كل الطلبات</div>
+        </div>
 
-  <div class="grid">
+        <div class="stat">
+          <div>طلبات الانتظار ⏳</div>
+          <div class="stat-value" id="statPending">—</div>
+          <div class="stat-foot">تحتاج للمراجعة</div>
+        </div>
 
-    <div class="stat">
-      <div>إجمالي المنتجات 📦</div>
-      <div class="stat-value" id="statProducts">0</div>
-      <div class="stat-foot">المنتجات المسجلة</div>
-    </div>
-
-    <div class="stat">
-      <div>إجمالي الطلبات 🛒</div>
-      <div class="stat-value" id="statOrders">0</div>
-      <div class="stat-foot">كل الطلبات</div>
-    </div>
-
-    <div class="stat">
-      <div>طلبات الانتظار ⏳</div>
-      <div class="stat-value" id="statPending">0</div>
-      <div class="stat-foot">تحتاج للمراجعة</div>
-    </div>
-
-    <div class="stat">
-      <div>قيمة الطلبات 💰</div>
-      <div class="stat-value" id="statRevenue">0</div>
-      <div class="stat-foot">بالدينار الجزائري</div>
-    </div>
-
-  </div>
-
-  <div class="panel">
-
-    <div class="panel-head">
-      <h2>أحدث الطلبات</h2>
-      <button class="btn secondary" data-goto="orders">
-        عرض كل الطلبات
-      </button>
-    </div>
-
-    <div id="recentOrders" class="table-wrap">
-      جاري تحميل البيانات...
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- ORDERS -->
-
-<section id="orders" class="page">
-
-  <div class="panel">
-
-    <div class="panel-head">
-      <div>
-        <h2>إدارة الطلبات</h2>
-        <div class="sub">مراجعة الطلبات ومعلومات الزبائن</div>
+        <div class="stat">
+          <div>قيمة الطلبات 💰</div>
+          <div class="stat-value" id="statRevenue">—</div>
+          <div class="stat-foot">بالدينار الجزائري</div>
+        </div>
       </div>
 
-      <button class="btn secondary" id="refreshOrders">
-        تحديث
-      </button>
-    </div>
-
-    <div class="actions" style="margin-bottom:15px">
-
-      <input
-        id="orderSearch"
-        placeholder="ابحث بالاسم أو الهاتف أو رقم الطلب"
-      >
-
-      <select id="orderFilter" style="max-width:180px">
-        <option value="">كل الحالات</option>
-        <option value="pending">قيد الانتظار</option>
-        <option value="confirmed">مؤكد</option>
-        <option value="cancelled">ملغى</option>
-      </select>
-
-    </div>
-
-    <div id="ordersTable" class="table-wrap">
-      جاري تحميل الطلبات...
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- PRODUCTS -->
-
-<section id="products" class="page">
-
-  <div class="panel">
-
-    <div class="panel-head">
-      <div>
-        <h2 id="productFormTitle">إضافة منتج جديد</h2>
-        <div class="sub">إدارة منتجات ZALMEX</div>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>أحدث الطلبات</h2>
+          <button class="btn secondary" data-goto="orders">عرض كل الطلبات</button>
+        </div>
+        <div id="recentOrders" class="table-wrap">جاري تحميل البيانات...</div>
       </div>
+    </section>
 
-      <button class="btn secondary" id="resetProduct">
-        تفريغ الحقول
-      </button>
-    </div>
-
-    <form id="productForm">
-
-      <input type="hidden" id="productId">
-
-      <div class="form-grid">
-
-        <div class="field">
-          <label>اسم المنتج بالعربية *</label>
-          <input id="productName" required>
+    <!-- ORDERS -->
+    <section id="orders" class="page">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>إدارة الطلبات</h2>
+            <div class="sub">مراجعة الطلبات ومعلومات الزبائن</div>
+          </div>
+          <button class="btn secondary" id="refreshOrders">تحديث</button>
         </div>
 
-        <div class="field">
-          <label>اسم المنتج بالفرنسية</label>
-          <input id="productNameFr">
-        </div>
-
-        <div class="field">
-          <label>السعر بالدينار *</label>
-          <input id="productPrice" type="number" min="0" required>
-        </div>
-
-        <div class="field">
-          <label>السعر قبل التخفيض</label>
-          <input id="productCompare" type="number" min="0">
-        </div>
-
-        <div class="field">
-          <label>الكمية</label>
-          <input id="productStock" type="number" min="0" value="0">
-        </div>
-
-        <div class="field">
-          <label>رمز المنتج SKU</label>
-          <input id="productSku" placeholder="ZLM-0001">
-        </div>
-
-        <div class="field">
-          <label>التصنيف</label>
-          <select id="productCategory">
-            <option value="">بدون تصنيف</option>
+        <div class="actions" style="margin-bottom:15px">
+          <input id="orderSearch" placeholder="ابحث بالاسم أو الهاتف أو رقم الطلب">
+          <select id="orderFilter" style="max-width:180px">
+            <option value="">كل الحالات</option>
+            <option value="pending">قيد الانتظار</option>
+            <option value="confirmed">مؤكد</option>
+            <option value="shipped">تم الشحن</option>
+            <option value="delivered">تم التسليم</option>
+            <option value="cancelled">ملغى</option>
           </select>
         </div>
 
-        <div class="field">
-          <label>صورة المنتج</label>
-          <input id="productFile" type="file" accept="image/*">
+        <div id="ordersTable" class="table-wrap">جاري تحميل الطلبات...</div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section id="products" class="page">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 id="productFormTitle">إضافة منتج جديد</h2>
+            <div class="sub">إدارة منتجات ZALMEX</div>
+          </div>
+          <button class="btn secondary" id="resetProduct" type="button">تفريغ الحقول</button>
         </div>
 
-        <div class="field full">
-          <label>وصف المنتج</label>
-          <textarea id="productDescription"></textarea>
-        </div>
+        <form id="productForm">
+          <input type="hidden" id="productId">
 
-        <div class="field full">
-          <label>خيارات المنتج بصيغة JSON</label>
-          <textarea
-            id="productOptions"
-            placeholder='[{"name":"اللون","values":["أسود","أبيض"]}]'
-          ></textarea>
-          <small class="sub">
-            كل منتج عنده خياراته الخاصة.
-          </small>
-        </div>
+          <div class="form-grid">
+            <div class="field">
+              <label>اسم المنتج بالعربية *</label>
+              <input id="productName" required>
+            </div>
 
-        <div class="field">
-          <label>
-            <input
-              id="productActive"
-              type="checkbox"
-              checked
-              style="width:auto"
-            >
-            المنتج نشط
-          </label>
-        </div>
+            <div class="field">
+              <label>اسم المنتج بالفرنسية</label>
+              <input id="productNameFr">
+            </div>
 
+            <div class="field">
+              <label>السعر بالدينار *</label>
+              <input id="productPrice" type="number" min="0" required>
+            </div>
+
+            <div class="field">
+              <label>السعر قبل التخفيض</label>
+              <input id="productCompare" type="number" min="0">
+            </div>
+
+            <div class="field">
+              <label>الكمية</label>
+              <input id="productStock" type="number" min="0" value="0">
+            </div>
+
+            <div class="field">
+              <label>رمز المنتج SKU</label>
+              <input id="productSku" placeholder="ZLM-0001">
+            </div>
+
+            <div class="field">
+              <label>التصنيف</label>
+              <select id="productCategory">
+                <option value="">بدون تصنيف</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>صورة المنتج</label>
+              <input id="productFile" type="file" accept="image/*">
+            </div>
+
+            <div class="field full">
+              <label>وصف المنتج</label>
+              <textarea id="productDescription"></textarea>
+            </div>
+
+            <div class="field full">
+              <label>خيارات المنتج بصيغة JSON</label>
+              <textarea id="productOptions"
+                placeholder='[{"name":"اللون","values":["أسود","أبيض"]}]'></textarea>
+              <small class="sub">كل منتج عنده خياراته الخاصة.</small>
+            </div>
+
+            <div class="field">
+              <label style="display:flex;align-items:center;gap:8px">
+                <input id="productActive" type="checkbox" checked style="width:auto">
+                المنتج نشط
+              </label>
+            </div>
+          </div>
+
+          <div id="productImageStatus" class="sub"></div>
+
+          <button class="btn" type="submit" id="saveProductBtn">
+            حفظ المنتج
+          </button>
+
+          <p id="productMessage" class="sub"></p>
+        </form>
       </div>
 
-      <button class="btn" type="submit" id="saveProductBtn">
-        حفظ المنتج
-      </button>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>قائمة المنتجات</h2>
+          <button class="btn secondary" id="refreshProducts">تحديث</button>
+        </div>
+        <div id="productsTable" class="table-wrap">جاري تحميل المنتجات...</div>
+      </div>
+    </section>
 
-      <p id="productMessage" class="sub"></p>
+    <!-- OTHER SECTIONS -->
+    <section id="warehouse" class="page">
+      <div class="panel">
+        <h2>المستودع والعمليات</h2>
+        <p class="sub">إدارة المخزون ستضاف في المرحلة القادمة.</p>
+      </div>
+    </section>
 
-    </form>
+    <section id="shipping" class="page">
+      <div class="panel">
+        <h2>شركات التوصيل</h2>
+        <p class="sub">سيتم ربط شركات التوصيل بعد توفر حسابات التاجر وبيانات الربط.</p>
+      </div>
+    </section>
 
-  </div>
+    <section id="marketing" class="page">
+      <div class="panel">
+        <h2>التسويق والبيكسل</h2>
+        <p class="sub">إعدادات Meta Pixel وTikTok Pixel ستضاف لاحقاً.</p>
+      </div>
+    </section>
 
+    <section id="analytics" class="page">
+      <div class="panel">
+        <h2>التحليلات</h2>
+        <p class="sub">سيتم بناء الإحصائيات والرسوم البيانية لاحقاً.</p>
+      </div>
+    </section>
 
-  <div class="panel">
+    <section id="intelligence" class="page">
+      <div class="panel">
+        <h2>ذكاء التجارة واتخاذ القرارات</h2>
+        <p class="notice">
+          قسم مستقل لتحليل الأرباح والمنتجات والإعلانات والطلبات،
+          وسيتم ربطه ببيانات المتجر الحقيقية.
+        </p>
+      </div>
+    </section>
 
-    <div class="panel-head">
-      <h2>قائمة المنتجات</h2>
-
-      <button class="btn secondary" id="refreshProducts">
-        تحديث
-      </button>
-    </div>
-
-    <div id="productsTable" class="table-wrap">
-      جاري تحميل المنتجات...
-    </div>
-
-  </div>
-
-</section>
+    <section id="settings" class="page">
+      <div class="panel">
+        <h2>إعدادات المتجر</h2>
+        <p class="sub">إعدادات المتجر العامة ستضاف تدريجياً.</p>
+      </div>
+    </section>
 
   </main>
 </div>
 
 <script>
+/* ===============================
+   ZALMEX ADMIN - JAVASCRIPT
+================================ */
+
 const SUPABASE_URL = "https://jblehthxfyeseqbzhijy.supabase.co";
 const SUPABASE_KEY = "sb_publishable_6JRg31NgFFiry4ah_qxBvw_9ffoph9s";
 
@@ -719,78 +552,85 @@ const db = window.supabase.createClient(
 
 const $ = id => document.getElementById(id);
 
-// ===============================
-// ZALMEX ADMIN - PART 3
-// Navigation and login
-// ===============================
-let currentPage = "dashboard";
+let allOrders = [];
+let allProducts = [];
+let editingProductId = null;
 
-const pageInfo = {
-  dashboard: ["الرئيسية", "نظرة عامة على نشاط ZALMEX"],
-  orders: ["الطلبات", "إدارة طلبات الزبائن"],
-  products: ["المنتجات", "إدارة منتجات المتجر"],
-  warehouse: ["المستودع والعمليات", "إدارة المخزون"],
-  shipping: ["شركات التوصيل", "إدارة شركات الشحن"],
-  marketing: ["التسويق والبيكسل", "متابعة الحملات الإعلانية"],
-  analytics: ["التحليلات", "إحصائيات نشاط المتجر"],
-  intelligence: ["ذكاء التجارة واتخاذ القرارات", "المستشار الذكي لـ ZALMEX"],
-  settings: ["الإعدادات", "إعدادات المتجر"]
-};
+/* ===== أدوات مساعدة ===== */
 
-function showPage(pageId) {
-  document.querySelectorAll(".page").forEach(page => {
-    page.classList.remove("active");
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  }[char]));
+}
+
+function showMessage(id, message, success = false) {
+  const element = $(id);
+  if (!element) return;
+
+  element.textContent = message;
+  element.style.color = success ? "#15803d" : "#dc2626";
+}
+
+function formatPrice(value) {
+  return Number(value || 0).toLocaleString("fr-DZ") + " دج";
+}
+
+function formatDate(value) {
+  if (!value) return "—";
+  return new Date(value).toLocaleString("ar-DZ");
+}
+
+/* ===== تسجيل الدخول والخروج ===== */
+
+async function loginAdmin(event) {
+  event.preventDefault();
+
+  const email = $("loginEmail").value.trim();
+  const password = $("loginPassword").value;
+  const button = $("loginBtn");
+
+  button.disabled = true;
+  button.textContent = "جاري الدخول...";
+
+  showMessage("loginError", "");
+
+  const { data, error } = await db.auth.signInWithPassword({
+    email,
+    password
   });
 
-  const target = $(pageId);
-  if (!target) {
-    alert("هذه الصفحة لم تتم إضافتها بعد");
+  button.disabled = false;
+  button.textContent = "تسجيل الدخول";
+
+  if (error) {
+    showMessage("loginError", "خطأ في الدخول: " + error.message);
     return;
   }
 
-  target.classList.add("active");
-
-  document.querySelectorAll(".nav button[data-page]").forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.page === pageId);
-  });
-
-  currentPage = pageId;
-
-  $("pageTitle").textContent = pageInfo[pageId][0];
-  $("pageSubtitle").textContent = pageInfo[pageId][1];
-
-  $("sidebar")?.classList.remove("open");
+  showAdmin(data.session);
 }
 
-document.querySelectorAll(".nav button[data-page]").forEach(btn => {
-  btn.addEventListener("click", () => {
-    showPage(btn.dataset.page);
-  });
-});
+function showAdmin(session) {
+  if (!session) return;
 
-document.querySelectorAll("[data-goto]").forEach(btn => {
-  btn.addEventListener("click", () => {
-    showPage(btn.dataset.goto);
-  });
-});
-
-$("menuBtn")?.addEventListener("click", () => {
-  $("sidebar").classList.toggle("open");
-});
-// Login
-function showAdmin() {
   $("loginScreen").classList.add("hidden");
   $("app").classList.remove("hidden");
 
-  $("userEmail").textContent = "حساب الإدارة";
+  if ($("userEmail")) {
+    $("userEmail").textContent = session.user.email;
+  }
 
-  showPage("dashboard");
   loadDashboard();
+  loadCategories();
+  loadProducts();
+  loadOrders();
 }
-  $("loginForm").addEventListener("submit", function(e) {
-  e.preventDefault();
-  loginAdmin();
-});
+
 async function logoutAdmin() {
   const { error } = await db.auth.signOut();
 
@@ -802,7 +642,6 @@ async function logoutAdmin() {
   location.reload();
 }
 
-// Restore existing session
 async function checkAdminSession() {
   const { data, error } = await db.auth.getSession();
 
@@ -812,52 +651,553 @@ async function checkAdminSession() {
   }
 
   if (data.session) {
-    showAdmin();
+    showAdmin(data.session);
   }
 }
 
-// Dashboard
-async function loadDashboard() {
-  try {
-    const [productsResult, ordersResult] = await Promise.all([
-      db.from("products").select("id", { count: "exact", head: true }),
-      db.from("orders").select("id,status,total")
-    ]);
-
-    if (productsResult.error) throw productsResult.error;
-    if (ordersResult.error) throw ordersResult.error;
-
-    const orders = ordersResult.data || [];
-
-    const totalOrders = orders.length;
-    const pendingOrders = orders.filter(o => o.status === "pending").length;
-    const totalSales = orders
-      .filter(o => o.status === "confirmed" || o.status === "delivered")
-      .reduce((sum, o) => sum + Number(o.total || 0), 0);
-
-    if ($("statProducts")) $("statProducts").textContent =
-      productsResult.count ?? 0;
-
-    if ($("statOrders")) $("statOrders").textContent =
-      totalOrders;
-
-    if ($("statPending")) $("statPending").textContent =
-      pendingOrders;
-
-    if ($("statSales")) $("statSales").textContent =
-      totalSales.toLocaleString("fr-DZ") + " دج";
-
-  } catch (error) {
-    console.error("Dashboard error:", error);
-  }
+if ($("loginForm")) {
+  $("loginForm").addEventListener("submit", loginAdmin);
 }
 
-// Start
-document.addEventListener("DOMContentLoaded", () => {
-  checkAdminSession();
+if ($("logoutBtn")) {
+  $("logoutBtn").addEventListener("click", logoutAdmin);
+}
+
+db.auth.onAuthStateChange((event, session) => {
+  if (event === "SIGNED_IN" && session) {
+    showAdmin(session);
+  }
 });
 
-</script>
+checkAdminSession();
 
+/* ===== التنقل بين الصفحات ===== */
+
+const pageNames = {
+  dashboard: "الرئيسية",
+  orders: "الطلبات",
+  products: "المنتجات",
+  warehouse: "المخزون",
+  shipping: "شركات التوصيل",
+  marketing: "بيكسل الإعلانات",
+  analytics: "التحليلات",
+  intelligence: "ذكاء التجارة واتخاذ القرارات",
+  settings: "الإعدادات"
+};
+
+function showPage(page) {
+  document.querySelectorAll(".page").forEach(section => {
+    section.classList.add("hidden");
+  });
+
+  const selected = $("page-" + page);
+
+  if (selected) {
+    selected.classList.remove("hidden");
+  }
+
+  document.querySelectorAll("[data-page]").forEach(button => {
+    button.classList.toggle(
+      "active",
+      button.dataset.page === page
+    );
+  });
+
+  if ($("pageTitle")) {
+    $("pageTitle").textContent = pageNames[page] || "ZALMEX";
+  }
+
+  if (page === "orders") loadOrders();
+  if (page === "products") loadProducts();
+  if (page === "dashboard") loadDashboard();
+}
+
+document.querySelectorAll("[data-page]").forEach(button => {
+  button.addEventListener("click", () => {
+    showPage(button.dataset.page);
+  });
+});
+
+/* ===== لوحة الرئيسية ===== */
+
+async function loadDashboard() {
+  const [productsResult, ordersResult] = await Promise.all([
+    db.from("products").select("id", { count: "exact", head: true }),
+    db.from("orders").select("id,status,total")
+  ]);
+
+  if (productsResult.error) {
+    console.error(productsResult.error);
+  }
+
+  if (ordersResult.error) {
+    console.error(ordersResult.error);
+    return;
+  }
+
+  const orders = ordersResult.data || [];
+
+  const pending = orders.filter(order =>
+    order.status === "pending"
+  ).length;
+
+  const revenue = orders
+    .filter(order =>
+      ["confirmed", "shipped", "delivered"].includes(order.status)
+    )
+    .reduce((sum, order) => sum + Number(order.total || 0), 0);
+
+  if ($("statProducts")) {
+    $("statProducts").textContent =
+      productsResult.count ?? 0;
+  }
+
+  if ($("statOrders")) {
+    $("statOrders").textContent = orders.length;
+  }
+
+  if ($("statPending")) {
+    $("statPending").textContent = pending;
+  }
+
+  if ($("statRevenue")) {
+    $("statRevenue").textContent = formatPrice(revenue);
+  }
+}
+
+/* ===== إدارة التصنيفات ===== */
+
+async function loadCategories() {
+  const select = $("productCategory");
+  if (!select) return;
+
+  const { data, error } = await db
+    .from("categories")
+    .select("*");
+
+  if (error) {
+    console.error("Categories:", error.message);
+    return;
+  }
+
+  select.innerHTML = '<option value="">اختر التصنيف</option>';
+
+  (data || []).forEach(category => {
+    const option = document.createElement("option");
+
+    option.value = category.id;
+    option.textContent =
+      category.name_ar ||
+      category.name_fr ||
+      category.name ||
+      "تصنيف";
+
+    select.appendChild(option);
+  });
+}
+
+/* ===== إدارة المنتجات ===== */
+
+async function loadProducts() {
+  const table = $("productsTable");
+  if (!table) return;
+
+  table.innerHTML = `
+    <tr><td colspan="6">جاري تحميل المنتجات...</td></tr>
+  `;
+
+  const { data, error } = await db
+    .from("products")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    table.innerHTML = `
+      <tr><td colspan="6">خطأ: ${escapeHTML(error.message)}</td></tr>
+    `;
+    return;
+  }
+
+  allProducts = data || [];
+
+  if (!allProducts.length) {
+    table.innerHTML = `
+      <tr><td colspan="6">لا توجد منتجات حاليا</td></tr>
+    `;
+    return;
+  }
+
+  table.innerHTML = allProducts.map(product => `
+    <tr>
+      <td>
+        ${
+          product.image_url
+          ? `<img src="${escapeHTML(product.image_url)}"
+               alt="" style="width:48px;height:48px;object-fit:cover;border-radius:8px">`
+          : "—"
+        }
+      </td>
+      <td>${escapeHTML(product.name_ar)}</td>
+      <td>${formatPrice(product.price)}</td>
+      <td>${Number(product.stock || 0)}</td>
+      <td>${product.is_active ? "نشط" : "متوقف"}</td>
+      <td>
+        <button type="button" data-edit-product="${product.id}">
+          تعديل
+        </button>
+        <button type="button" data-toggle-product="${product.id}">
+          ${product.is_active ? "إيقاف" : "تفعيل"}
+        </button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+function resetProductForm() {
+  editingProductId = null;
+
+  if ($("productFormTitle")) {
+    $("productFormTitle").textContent = "إضافة منتج جديد";
+  }
+
+  [
+    "productId",
+    "productName",
+    "productNameFr",
+    "productPrice",
+    "productCompare",
+    "productStock",
+    "productSku",
+    "productDescription",
+    "productOptions",
+    "productImage"
+  ].forEach(id => {
+    if ($(id)) $(id).value = "";
+  });
+
+  if ($("productCategory")) $("productCategory").value = "";
+  if ($("productActive")) $("productActive").checked = true;
+  if ($("productFile")) $("productFile").value = "";
+
+  showMessage("productMessage", "");
+}
+
+if ($("resetProduct")) {
+  $("resetProduct").addEventListener("click", resetProductForm);
+}
+
+async function saveProduct() {
+  const name = $("productName").value.trim();
+  const price = Number($("productPrice").value);
+  const stock = Number($("productStock").value);
+
+  if (!name || !Number.isFinite(price) || price <= 0) {
+    showMessage("productMessage", "أدخل اسم المنتج وسعرا صحيحا.");
+    return;
+  }
+
+  if (!Number.isFinite(stock) || stock < 0) {
+    showMessage("productMessage", "أدخل كمية مخزون صحيحة.");
+    return;
+  }
+
+  const button = $("saveProductBtn");
+  button.disabled = true;
+  button.textContent = "جاري الحفظ...";
+
+  try {
+    let imageUrl = $("productImage").value.trim();
+
+    const file = $("productFile").files[0];
+
+    if (file) {
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const filePath = Date.now() + "-" + safeName;
+
+      const { error: uploadError } = await db.storage
+        .from("product-images")
+        .upload(filePath, file, {
+          contentType: file.type,
+          upsert: false
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicData } = db.storage
+        .from("product-images")
+        .getPublicUrl(filePath);
+
+      imageUrl = publicData.publicUrl;
+    }
+
+    const payload = {
+      name_ar: name,
+      name_fr: $("productNameFr").value.trim() || null,
+      description: $("productDescription").value.trim() || null,
+      price,
+      stock,
+      category_id: $("productCategory").value || null,
+      image_url: imageUrl || null,
+      is_active: $("productActive").checked
+    };
+
+    let result;
+
+    if (editingProductId) {
+      result = await db
+        .from("products")
+        .update(payload)
+        .eq("id", editingProductId);
+    } else {
+      result = await db
+        .from("products")
+        .insert(payload);
+    }
+
+    if (result.error) throw result.error;
+
+    showMessage(
+      "productMessage",
+      editingProductId
+        ? "تم تحديث المنتج بنجاح."
+        : "تم حفظ المنتج بنجاح.",
+      true
+    );
+
+    resetProductForm();
+    await loadProducts();
+    await loadDashboard();
+
+  } catch (error) {
+    showMessage("productMessage", "حدث خطأ: " + error.message);
+  }
+
+  button.disabled = false;
+  button.textContent = "حفظ المنتج";
+}
+
+if ($("saveProductBtn")) {
+  $("saveProductBtn").addEventListener("click", saveProduct);
+}
+
+/* تعديل أو تفعيل/إيقاف المنتج */
+
+document.addEventListener("click", async event => {
+  const editButton = event.target.closest("[data-edit-product]");
+
+  if (editButton) {
+    const product = allProducts.find(item =>
+      String(item.id) === editButton.dataset.editProduct
+    );
+
+    if (!product) return;
+
+    editingProductId = product.id;
+
+    $("productId").value = product.id;
+    $("productName").value = product.name_ar || "";
+    $("productNameFr").value = product.name_fr || "";
+    $("productPrice").value = product.price || "";
+    $("productStock").value = product.stock || 0;
+    $("productDescription").value = product.description || "";
+    $("productImage").value = product.image_url || "";
+    $("productCategory").value = product.category_id || "";
+    $("productActive").checked = !!product.is_active;
+
+    if ($("productFormTitle")) {
+      $("productFormTitle").textContent = "تعديل المنتج";
+    }
+
+    showPage("products");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    return;
+  }
+
+  const toggleButton = event.target.closest("[data-toggle-product]");
+
+  if (toggleButton) {
+    const product = allProducts.find(item =>
+      String(item.id) === toggleButton.dataset.toggleProduct
+    );
+
+    if (!product) return;
+
+    const { error } = await db
+      .from("products")
+      .update({ is_active: !product.is_active })
+      .eq("id", product.id);
+
+    if (error) {
+      alert("تعذر تحديث المنتج: " + error.message);
+      return;
+    }
+
+    await loadProducts();
+    await loadDashboard();
+  }
+});
+
+/* ===== إدارة الطلبات ===== */
+
+async function loadOrders() {
+  const table = $("ordersTable");
+  if (!table) return;
+
+  table.innerHTML = `
+    <tr><td colspan="8">جاري تحميل الطلبات...</td></tr>
+  `;
+
+  const { data, error } = await db
+    .from("orders")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    table.innerHTML = `
+      <tr><td colspan="8">خطأ: ${escapeHTML(error.message)}</td></tr>
+    `;
+    return;
+  }
+
+  allOrders = data || [];
+  renderOrders();
+}
+
+function renderOrders() {
+  const table = $("ordersTable");
+  if (!table) return;
+
+  const search = ($("ordersSearch")?.value || "")
+    .trim()
+    .toLowerCase();
+
+  const filter = $("ordersFilter")?.value || "all";
+
+  const filtered = allOrders.filter(order => {
+    const text = [
+      order.order_number,
+      order.customer_name,
+      order.phone,
+      order.wilaya,
+      order.municipality
+    ].join(" ").toLowerCase();
+
+    const matchesSearch = text.includes(search);
+    const matchesStatus =
+      filter === "all" || order.status === filter;
+
+    return matchesSearch && matchesStatus;
+  });
+
+  if (!filtered.length) {
+    table.innerHTML = `
+      <tr><td colspan="8">لا توجد طلبات مطابقة</td></tr>
+    `;
+    return;
+  }
+
+  table.innerHTML = filtered.map(order => `
+    <tr>
+      <td>${escapeHTML(order.order_number || order.id)}</td>
+      <td>${escapeHTML(order.customer_name)}</td>
+      <td>
+        <a href="tel:${escapeHTML(order.phone)}">
+          ${escapeHTML(order.phone)}
+        </a>
+      </td>
+      <td>${escapeHTML(order.wilaya)}</td>
+      <td>${formatPrice(order.total)}</td>
+      <td>${escapeHTML(order.status)}</td>
+      <td>${formatDate(order.created_at)}</td>
+      <td>
+        ${
+          order.status === "pending"
+          ? `
+            <button type="button" data-confirm-order="${order.id}">
+              تأكيد الطلب
+            </button>
+            <button type="button" data-cancel-order="${order.id}">
+              إلغاء
+            </button>
+          `
+          : "—"
+        }
+      </td>
+    </tr>
+  `).join("");
+}
+
+if ($("ordersSearch")) {
+  $("ordersSearch").addEventListener("input", renderOrders);
+}
+
+if ($("ordersFilter")) {
+  $("ordersFilter").addEventListener("change", renderOrders);
+}
+
+if ($("refreshOrders")) {
+  $("refreshOrders").addEventListener("click", loadOrders);
+}
+
+/* تأكيد الطلب وخصم المخزون عبر الدالة الموجودة في Supabase */
+
+document.addEventListener("click", async event => {
+  const confirmButton = event.target.closest("[data-confirm-order]");
+
+  if (confirmButton) {
+    const orderId = Number(confirmButton.dataset.confirmOrder);
+
+    if (!confirm("هل تريد تأكيد هذا الطلب وخصم الكمية من المخزون؟")) {
+      return;
+    }
+
+    confirmButton.disabled = true;
+    confirmButton.textContent = "جاري التأكيد...";
+
+    const { error } = await db.rpc("confirm_zalmex_order", {
+      p_order_id: orderId
+    });
+
+    if (error) {
+      alert("فشل تأكيد الطلب: " + error.message);
+      confirmButton.disabled = false;
+      confirmButton.textContent = "تأكيد الطلب";
+      return;
+    }
+
+    alert("تم تأكيد الطلب وتحديث المخزون.");
+    await loadOrders();
+    await loadProducts();
+    await loadDashboard();
+    return;
+  }
+
+  const cancelButton = event.target.closest("[data-cancel-order]");
+
+  if (cancelButton) {
+    const orderId = Number(cancelButton.dataset.cancelOrder);
+
+    if (!confirm("هل تريد إلغاء هذا الطلب؟")) return;
+
+    const { error } = await db
+      .from("orders")
+      .update({ status: "cancelled" })
+      .eq("id", orderId)
+      .eq("status", "pending");
+
+    if (error) {
+      alert("تعذر إلغاء الطلب: " + error.message);
+      return;
+    }
+
+    await loadOrders();
+    await loadDashboard();
+  }
+});
+
+/* ===== تشغيل أولي ===== */
+
+console.log("ZALMEX Admin initialized");
+</script>
 </body>
 </html>
