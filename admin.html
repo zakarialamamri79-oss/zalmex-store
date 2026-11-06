@@ -1244,6 +1244,7 @@ document.addEventListener("click", async event => {
     await loadOrders();
     await loadProducts();
     await loadDashboard();
+    await loadRecentOrders();
     return;
   }
 
@@ -1267,6 +1268,7 @@ document.addEventListener("click", async event => {
 
     await loadOrders();
     await loadDashboard();
+    await loadRecentOrders();
   }
 });
 
