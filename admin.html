@@ -1024,6 +1024,11 @@ document.addEventListener("click", async event => {
     $("productDescription").value = product.description || "";
     $("productImage").value = product.image_url || "";
     $("productCategory").value = product.category_id || "";
+    $("productOptions").value = JSON.stringify(
+  product.product_options || [],
+  null,
+  2
+);
     $("productActive").checked = !!product.is_active;
 
     if ($("productFormTitle")) {
