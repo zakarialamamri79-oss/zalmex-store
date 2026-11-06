@@ -670,16 +670,15 @@ db.auth.onAuthStateChange((event, session) => {
 });
 
 checkAdminSession();
-
-/* ===== التنقل بين الصفحات ===== */
+/* ===== التنقل والقائمة الجانبية ===== */
 
 const pageNames = {
   dashboard: "الرئيسية",
   orders: "الطلبات",
   products: "المنتجات",
-  warehouse: "المخزون",
+  warehouse: "المخزون والعمليات",
   shipping: "شركات التوصيل",
-  marketing: "بيكسل الإعلانات",
+  marketing: "التسويق والبيكسل",
   analytics: "التحليلات",
   intelligence: "ذكاء التجارة واتخاذ القرارات",
   settings: "الإعدادات"
@@ -687,13 +686,13 @@ const pageNames = {
 
 function showPage(page) {
   document.querySelectorAll(".page").forEach(section => {
-    section.classList.add("hidden");
+    section.classList.remove("active");
   });
 
-  const selected = $("page-" + page);
+  const selected = $(page);
 
   if (selected) {
-    selected.classList.remove("hidden");
+    selected.classList.add("active");
   }
 
   document.querySelectorAll("[data-page]").forEach(button => {
@@ -707,17 +706,36 @@ function showPage(page) {
     $("pageTitle").textContent = pageNames[page] || "ZALMEX";
   }
 
+  // إغلاق القائمة بعد اختيار الصفحة في الهاتف
+  if (window.innerWidth <= 650) {
+    $("sidebar").classList.remove("open");
+  }
+
   if (page === "orders") loadOrders();
   if (page === "products") loadProducts();
   if (page === "dashboard") loadDashboard();
 }
 
+// أزرار القائمة
 document.querySelectorAll("[data-page]").forEach(button => {
   button.addEventListener("click", () => {
     showPage(button.dataset.page);
   });
 });
 
+// زر القائمة ☰
+if ($("menuBtn")) {
+  $("menuBtn").addEventListener("click", () => {
+    $("sidebar").classList.toggle("open");
+  });
+}
+
+// زر عرض كل الطلبات
+document.querySelectorAll("[data-goto]").forEach(button => {
+  button.addEventListener("click", () => {
+    showPage(button.dataset.goto);
+  });
+});
 /* ===== لوحة الرئيسية ===== */
 
 async function loadDashboard() {
