@@ -786,7 +786,54 @@ async function loadDashboard() {
     $("statRevenue").textContent = formatPrice(revenue);
   }
 }
+async function loadRecentOrders() {
+  const container = $("recentOrders");
+  if (!container) return;
 
+  const { data, error } = await db
+    .from("orders")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(5);
+
+  if (error) {
+    container.textContent = "تعذر تحميل أحدث الطلبات";
+    console.error(error);
+    return;
+  }
+
+  const orders = data || [];
+
+  if (!orders.length) {
+    container.textContent = "لا توجد طلبات حتى الآن";
+    return;
+  }
+
+  container.innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>رقم الطلب</th>
+          <th>الزبون</th>
+          <th>الهاتف</th>
+          <th>المبلغ</th>
+          <th>الحالة</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${orders.map(order => `
+          <tr>
+            <td>${escapeHTML(order.order_number || order.id)}</td>
+            <td>${escapeHTML(order.customer_name)}</td>
+            <td>${escapeHTML(order.phone)}</td>
+            <td>${formatPrice(order.total)}</td>
+            <td>${escapeHTML(order.status)}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+  `;
+}
 /* ===== إدارة التصنيفات ===== */
 
 async function loadCategories() {
