@@ -1,0 +1,1940 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#17182d">
+<title>ZALMEX | Admin 2.0</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root{
+ --primary:#635bff;
+ --primary-dark:#4941d8;
+ --bg:#f5f7fc;
+ --white:#fff;
+ --text:#19233b;
+ --muted:#7b849b;
+ --border:#e9edf5;
+ --green:#12b886;
+ --red:#f05270;
+ --orange:#ff9f43;
+ --blue:#3995ff;
+ --cyan:#20c4c8;
+ --purple:#9b6bff;
+ --navy:#17182d;
+ --shadow:0 8px 30px rgba(35,45,90,.06);
+}
+
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ background:var(--bg);
+ color:var(--text);
+ font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+
+.login-screen{
+ min-height:100vh;
+ display:grid;
+ place-items:center;
+ padding:20px;
+ background:linear-gradient(135deg,#17182d,#34306f);
+}
+
+.login-card{
+ width:min(420px,100%);
+ background:#fff;
+ border-radius:24px;
+ padding:30px;
+ box-shadow:0 25px 80px #0003;
+}
+
+.brand{
+ font-size:27px;
+ font-weight:900;
+ letter-spacing:1px;
+ color:var(--primary);
+}
+
+.muted{color:var(--muted)}
+
+.field{
+ display:grid;
+ gap:7px;
+ margin:14px 0;
+}
+
+.field label{
+ font-size:13px;
+ font-weight:700;
+ color:#555f78;
+}
+
+.field input,
+.field select,
+.field textarea,
+.toolbar input,
+.toolbar select{
+ width:100%;
+ border:1px solid var(--border);
+ border-radius:11px;
+ padding:11px 12px;
+ background:#fff;
+ color:var(--text);
+ outline:none;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+ border-color:var(--primary);
+}
+
+.btn{
+ border:0;
+ border-radius:11px;
+ padding:11px 16px;
+ font-weight:750;
+ background:var(--primary);
+ color:white;
+}
+
+.btn:hover{filter:brightness(.96)}
+.btn.secondary{background:#eef0ff;color:var(--primary)}
+.btn.danger{background:#fff0f2;color:var(--red)}
+.btn.success{background:#e8fbf4;color:#07966b}
+.btn.small{padding:7px 10px;font-size:12px}
+
+#app{display:none}
+
+.sidebar{
+ position:fixed;
+ right:0;
+ top:0;
+ bottom:0;
+ width:258px;
+ background:var(--navy);
+ color:#fff;
+ padding:20px 14px;
+ overflow:auto;
+ z-index:20;
+}
+
+.logo{
+ padding:8px 12px 22px;
+ border-bottom:1px solid #ffffff18;
+ margin-bottom:15px;
+}
+
+.logo strong{
+ font-size:25px;
+ letter-spacing:1px;
+}
+
+.logo small{
+ display:block;
+ color:#aeb0ca;
+ margin-top:4px;
+}
+
+.nav-label{
+ font-size:11px;
+ color:#8f91ad;
+ padding:14px 12px 7px;
+}
+
+.nav button{
+ display:flex;
+ align-items:center;
+ gap:12px;
+ width:100%;
+ border:0;
+ background:transparent;
+ color:#c7c8dc;
+ text-align:right;
+ padding:11px 12px;
+ border-radius:10px;
+ margin:3px 0;
+ font-size:13px;
+}
+
+.nav button.active,
+.nav button:hover{
+ background:linear-gradient(100deg,#635bff,#847cff);
+ color:#fff;
+}
+
+.nav-icon{
+ width:22px;
+ text-align:center;
+ font-size:16px;
+}
+
+.main{
+ margin-right:258px;
+ padding:24px;
+ min-height:100vh;
+}
+
+.topbar{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:12px;
+ margin-bottom:24px;
+}
+
+.topbar h1{
+ font-size:24px;
+ margin:0;
+}
+
+.topbar p{
+ margin:5px 0 0;
+ color:var(--muted);
+ font-size:13px;
+}
+
+.user-area{
+ display:flex;
+ align-items:center;
+ gap:10px;
+}
+
+.user-email{
+ font-size:12px;
+ color:var(--muted);
+}
+
+.page{display:none}
+.page.active{display:block}
+
+.grid{
+ display:grid;
+ grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:15px;
+ margin-bottom:18px;
+}
+
+.card,.panel{
+ background:#fff;
+ border:1px solid var(--border);
+ border-radius:17px;
+ padding:18px;
+ box-shadow:var(--shadow);
+}
+
+.stat{
+ position:relative;
+ overflow:hidden;
+}
+
+.stat:after{
+ content:"";
+ position:absolute;
+ width:75px;
+ height:75px;
+ border-radius:50%;
+ left:-20px;
+ top:-20px;
+ background:var(--tint);
+}
+
+.stat-label{
+ color:var(--muted);
+ font-size:13px;
+}
+
+.stat strong{
+ display:block;
+ font-size:27px;
+ margin:8px 0;
+}
+
+.stat small{color:var(--muted)}
+
+.panel{margin-bottom:17px}
+
+.panel-head{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:12px;
+ margin-bottom:15px;
+}
+
+.panel h3{
+ margin:0;
+ font-size:16px;
+}
+
+.two-col{
+ display:grid;
+ grid-template-columns:1.4fr 1fr;
+ gap:16px;
+}
+
+.toolbar{
+ display:flex;
+ gap:9px;
+ flex-wrap:wrap;
+ margin-bottom:14px;
+}
+
+.toolbar input{max-width:260px}
+.toolbar select{max-width:190px}
+
+.table-wrap{overflow:auto}
+
+table{
+ width:100%;
+ border-collapse:collapse;
+ min-width:650px;
+}
+
+th,td{
+ text-align:right;
+ padding:12px 10px;
+ border-bottom:1px solid #f0f2f7;
+ font-size:13px;
+ white-space:nowrap;
+}
+
+th{
+ color:var(--muted);
+ font-weight:700;
+ background:#fafbfe;
+}
+
+.badge{
+ display:inline-block;
+ padding:5px 9px;
+ border-radius:20px;
+ font-size:11px;
+ font-weight:750;
+ background:#eef0ff;
+ color:var(--primary);
+}
+
+.badge.green{background:#e8fbf4;color:#07966b}
+.badge.red{background:#fff0f2;color:var(--red)}
+.badge.orange{background:#fff5e9;color:#d17a12}
+
+.product-thumb{
+ width:42px;
+ height:42px;
+ object-fit:cover;
+ border-radius:9px;
+ background:#f1f2f7;
+}
+
+.form-grid{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:0 14px;
+}
+
+.form-grid .full{grid-column:1/-1}
+
+.notice{
+ padding:13px 15px;
+ border-radius:12px;
+ background:#fff8e9;
+ color:#94600b;
+ font-size:13px;
+ line-height:1.7;
+ margin-bottom:15px;
+}
+
+.empty{
+ padding:28px;
+ text-align:center;
+ color:var(--muted);
+}
+
+.chart{
+ height:190px;
+ display:flex;
+ align-items:end;
+ gap:10px;
+ padding:15px 5px 0;
+ border-bottom:1px solid var(--border);
+}
+
+.chart-bar{
+ flex:1;
+ min-width:12px;
+ border-radius:7px 7px 0 0;
+ background:linear-gradient(180deg,#8a83ff,#635bff);
+ position:relative;
+}
+
+.chart-bar span{
+ position:absolute;
+ bottom:-23px;
+ left:50%;
+ transform:translateX(-50%);
+ font-size:10px;
+ color:var(--muted);
+}
+
+.quick-links{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px;
+}
+
+.quick-links button{
+ padding:14px;
+ border:1px solid var(--border);
+ border-radius:12px;
+ background:#fff;
+ text-align:right;
+ color:var(--text);
+}
+
+.quick-links button b{
+ display:block;
+ margin-bottom:4px;
+}
+
+.section-placeholder{
+ padding:28px;
+ text-align:center;
+ border:1px dashed #cdd2e2;
+ border-radius:16px;
+ background:#fff;
+}
+
+.mobile-menu{display:none}
+
+@media(max-width:1000px){
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .two-col{grid-template-columns:1fr}
+}
+
+@media(max-width:700px){
+ .sidebar{
+  transform:translateX(105%);
+  transition:.25s;
+  width:275px;
+ }
+ .sidebar.open{transform:translateX(0)}
+ .main{margin-right:0;padding:16px}
+ .mobile-menu{display:inline-flex}
+ .topbar h1{font-size:19px}
+ .user-email{display:none}
+ .grid{gap:10px}
+ .card,.panel{padding:14px}
+ .stat strong{font-size:22px}
+ .form-grid{grid-template-columns:1fr}
+ .form-grid .full{grid-column:auto}
+ .quick-links{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+
+<body>
+
+<section id="loginScreen" class="login-screen">
+ <div class="login-card">
+  <div class="brand">ZALMEX</div>
+  <p class="muted">لوحة إدارة التجارة الإلكترونية 2.0</p>
+
+  <form id="loginForm">
+   <div class="field">
+    <label>البريد الإلكتروني</label>
+    <input id="loginEmail" type="email" required>
+   </div>
+
+   <div class="field">
+    <label>كلمة المرور</label>
+    <input id="loginPassword" type="password" required>
+   </div>
+
+   <button class="btn" style="width:100%" type="submit">
+    تسجيل الدخول
+   </button>
+
+   <p id="loginError" style="color:var(--red);font-size:13px"></p>
+  </form>
+ </div>
+</section>
+
+<div id="app">
+
+ <aside class="sidebar" id="sidebar">
+
+  <div class="logo">
+   <strong>ZALMEX</strong>
+   <small>Commerce Control Center · 2.0</small>
+  </div>
+
+  <nav class="nav">
+
+   <div class="nav-label">الرئيسية</div>
+   <button class="active" data-page="dashboard">
+    <span class="nav-icon">▦</span>الرئيسية
+   </button>
+
+   <div class="nav-label">إدارة المتجر</div>
+   <button data-page="orders">🧾 الطلبات</button>
+   <button data-page="products">📦 المنتجات</button>
+   <button data-page="categories">🏷️ التصنيفات والعلامات</button>
+   <button data-page="warehouse">🏬 المخزون والمستودعات</button>
+   <button data-page="purchases">🛒 المشتريات والموردون</button>
+   <button data-page="customers">👥 العملاء</button>
+   <button data-page="discounts">🎟️ الخصومات والكوبونات</button>
+
+   <div class="nav-label">النمو والتشغيل</div>
+   <button data-page="marketing">📣 التسويق والإعلانات</button>
+   <button data-page="shipping">🚚 الشحن والتوصيل</button>
+   <button data-page="returns">↩️ المرتجعات والاستبدال</button>
+   <button data-page="finance">💰 المالية والأرباح</button>
+   <button data-page="analytics">📊 التحليلات والتقارير</button>
+   <button data-page="intelligence">🧠 ذكاء التجارة والقرارات</button>
+
+   <div class="nav-label">إدارة المنصة</div>
+   <button data-page="staff">🧑‍💼 الموظفون والصلاحيات</button>
+   <button data-page="marketplace">🏪 المتاجر والبائعون</button>
+   <button data-page="apps">🔌 التطبيقات وواجهات API</button>
+   <button data-page="settings">⚙️ الإعدادات والأمان</button>
+
+  </nav>
+ </aside>
+
+ <main class="main">
+
+  <header class="topbar">
+   <div style="display:flex;align-items:center;gap:12px">
+    <button class="btn secondary mobile-menu" id="menuBtn">☰</button>
+    <div>
+     <h1 id="pageTitle">الرئيسية</h1>
+     <p id="pageSubtitle">نظرة عامة على نشاط ZALMEX</p>
+    </div>
+   </div>
+
+   <div class="user-area">
+    <span class="user-email" id="userEmail"></span>
+    <button class="btn secondary small" id="logoutBtn">خروج</button>
+   </div>
+   
+</header>
+
+<!-- الصفحة الرئيسية -->
+<section class="page active" id="page-dashboard">
+
+ <div class="grid">
+  <div class="card stat" style="--tint:#635bff18">
+   <div class="stat-label">إجمالي المنتجات</div>
+   <strong id="statProducts">—</strong>
+   <small>منتج مسجل</small>
+  </div>
+
+  <div class="card stat" style="--tint:#20c4c818">
+   <div class="stat-label">إجمالي الطلبات</div>
+   <strong id="statOrders">—</strong>
+   <small>كل الطلبات</small>
+  </div>
+
+  <div class="card stat" style="--tint:#ff9f4318">
+   <div class="stat-label">طلبات الانتظار</div>
+   <strong id="statPending">—</strong>
+   <small>تحتاج إلى متابعة</small>
+  </div>
+
+  <div class="card stat" style="--tint:#12b88618">
+   <div class="stat-label">مبيعات الطلبات المؤكدة</div>
+   <strong id="statRevenue">—</strong>
+   <small>دج</small>
+  </div>
+ </div>
+
+ <div class="two-col">
+  <div class="panel">
+   <div class="panel-head">
+    <h3>ملخص حالات الطلبات</h3>
+    <button class="btn secondary small" id="refreshDashboard">تحديث</button>
+   </div>
+   <div id="statusSummary" class="quick-links"></div>
+  </div>
+
+  <div class="panel">
+   <h3>اختصارات سريعة</h3>
+   <div class="quick-links">
+    <button data-go="products">
+     <b>＋ إضافة منتج</b>
+     <small class="muted">إدراج سلعة جديدة</small>
+    </button>
+    <button data-go="orders">
+     <b>☷ متابعة الطلبات</b>
+     <small class="muted">مراجعة الطلبات</small>
+    </button>
+    <button data-go="analytics">
+     <b>▥ التقارير</b>
+     <small class="muted">عرض الأرقام</small>
+    </button>
+   </div>
+  </div>
+ </div>
+
+ <div class="panel">
+  <div class="panel-head">
+   <h3>أحدث الطلبات</h3>
+   <button class="btn secondary small" data-go="orders">كل الطلبات</button>
+  </div>
+  <div class="table-wrap">
+   <table>
+    <thead>
+     <tr>
+      <th>رقم الطلب</th>
+      <th>الزبون</th>
+      <th>الهاتف</th>
+      <th>الإجمالي</th>
+      <th>الحالة</th>
+      <th>التاريخ</th>
+     </tr>
+    </thead>
+    <tbody id="recentOrders"></tbody>
+   </table>
+  </div>
+ </div>
+</section>
+
+<!-- الطلبات -->
+<section class="page" id="page-orders">
+ <div class="panel">
+  <div class="panel-head">
+   <h3>إدارة الطلبات</h3>
+   <button class="btn secondary small" id="refreshOrders">تحديث القائمة</button>
+  </div>
+
+  <div class="toolbar">
+   <input id="orderSearch" placeholder="ابحث برقم الطلب أو اسم الزبون أو الهاتف">
+   <select id="orderFilter">
+    <option value="">كل الحالات</option>
+    <option value="pending">قيد الانتظار</option>
+    <option value="confirmed">مؤكد</option>
+    <option value="shipped">تم الشحن</option>
+    <option value="delivered">تم التسليم</option>
+    <option value="cancelled">ملغي</option>
+    <option value="returned">مرتجع</option>
+   </select>
+  </div>
+
+  <div class="table-wrap">
+   <table>
+    <thead>
+     <tr>
+      <th>رقم الطلب</th>
+      <th>الزبون</th>
+      <th>الهاتف</th>
+      <th>الولاية</th>
+      <th>الإجمالي</th>
+      <th>الحالة</th>
+      <th>التاريخ</th>
+      <th>الإجراء</th>
+     </tr>
+    </thead>
+    <tbody id="ordersTable"></tbody>
+   </table>
+  </div>
+ </div>
+</section>
+
+<!-- المنتجات -->
+<section class="page" id="page-products">
+ <div class="panel">
+  <div class="panel-head">
+   <h3 id="productFormTitle">إضافة منتج</h3>
+   <button class="btn secondary small" id="resetProduct">تفريغ الحقول</button>
+  </div>
+
+  <form id="productForm">
+   <input type="hidden" id="productId">
+   <input type="hidden" id="productImage">
+
+   <div class="form-grid">
+    <div class="field">
+     <label>اسم المنتج بالعربية *</label>
+     <input id="productName" required>
+    </div>
+
+    <div class="field">
+     <label>اسم المنتج بالفرنسية</label>
+     <input id="productNameFr">
+    </div>
+
+    <div class="field">
+     <label>السعر بالدينار *</label>
+     <input id="productPrice" type="number" min="0" required>
+    </div>
+
+    <div class="field">
+     <label>المخزون *</label>
+     <input id="productStock" type="number" min="0" value="0" required>
+    </div>
+
+    <div class="field">
+     <label>التصنيف</label>
+     <select id="productCategory">
+      <option value="">بدون تصنيف</option>
+     </select>
+    </div>
+
+    <div class="field">
+     <label>صورة المنتج</label>
+     <input id="productFile" type="file" accept="image/*">
+    </div>
+
+    <div class="field full">
+     <label>وصف المنتج</label>
+     <textarea id="productDescription" rows="3"></textarea>
+    </div>
+
+    <div class="field full">
+     <label>
+      <input id="productActive" type="checkbox" checked>
+      المنتج نشط ويظهر في المتجر
+     </label>
+    </div>
+   </div>
+
+   <p id="productMessage" class="muted"></p>
+   <button class="btn" id="saveProductBtn" type="submit">حفظ المنتج</button>
+  </form>
+ </div>
+
+ <div class="panel">
+  <div class="panel-head">
+   <h3>قائمة المنتجات</h3>
+   <button class="btn secondary small" id="refreshProducts">تحديث</button>
+  </div>
+
+  <div class="toolbar">
+   <input id="productSearch" placeholder="ابحث عن منتج...">
+  </div>
+
+  <div class="table-wrap">
+   <table>
+    <thead>
+     <tr>
+      <th>الصورة</th>
+      <th>المنتج</th>
+      <th>السعر</th>
+      <th>المخزون</th>
+      <th>الحالة</th>
+      <th>الإجراءات</th>
+     </tr>
+    </thead>
+    <tbody id="productsTable"></tbody>
+   </table>
+  </div>
+ </div>
+</section>
+
+<!-- التصنيفات -->
+<section class="page" id="page-categories">
+ <div class="panel">
+  <h3>التصنيفات والعلامات التجارية</h3>
+  <p class="muted">التصنيفات الحالية من قاعدة بيانات المتجر.</p>
+  <div id="categoriesList" class="quick-links"></div>
+ </div>
+</section>
+
+<!-- المخزون -->
+<section class="page" id="page-warehouse">
+ <div class="panel">
+  <h3>المخزون والمستودعات</h3>
+  <div class="notice">
+   متابعة رصيد المنتجات. سجل الحركات والجرد والمستودعات المتعددة يحتاج تطوير قاعدة البيانات.
+  </div>
+  <div id="warehouseList"></div>
+ </div>
+</section>
+
+<!-- المشتريات -->
+<section class="page" id="page-purchases">
+ <div class="section-placeholder">
+  <h3>المشتريات والموردون</h3>
+  <p class="muted">قيد التطوير: الموردون وأوامر الشراء وتكلفة الاستيراد والشحن والجمارك.</p>
+ </div>
+</section>
+
+<!-- العملاء -->
+<section class="page" id="page-customers">
+ <div class="panel">
+  <div class="panel-head">
+   <h3>العملاء</h3>
+   <button class="btn secondary small" id="refreshCustomers">تحديث</button>
+  </div>
+
+  <div class="table-wrap">
+   <table>
+    <thead>
+     <tr>
+      <th>الزبون</th>
+      <th>الهاتف</th>
+      <th>عدد الطلبات</th>
+      <th>إجمالي الطلبات</th>
+     </tr>
+    </thead>
+    <tbody id="customersTable"></tbody>
+   </table>
+  </div>
+ </div>
+</section>
+
+<!-- الخصومات -->
+<section class="page" id="page-discounts">
+ <div class="section-placeholder">
+  <h3>الخصومات والكوبونات</h3>
+  <p class="muted">قيد التطوير: نظام الكوبونات وقواعد الخصم.</p>
+ </div>
+</section>
+
+<!-- التسويق -->
+<section class="page" id="page-marketing">
+ <div class="section-placeholder">
+  <h3>التسويق والإعلانات</h3>
+  <p class="muted">قيد التطوير: Meta Pixel وTikTok Pixel وGoogle Ads وقياس ROAS.</p>
+ </div>
+</section>
+
+<!-- الشحن -->
+<section class="page" id="page-shipping">
+ <div class="section-placeholder">
+  <h3>الشحن والتوصيل</h3>
+  <p class="muted">قيد التطوير: شركات التوصيل ورسوم الولايات والتتبع وبوليصات الشحن.</p>
+ </div>
+</section>
+
+<!-- المرتجعات -->
+<section class="page" id="page-returns">
+ <div class="section-placeholder">
+  <h3>المرتجعات والاستبدال</h3>
+  <p class="muted">قيد التطوير: تسجيل المرتجعات وحالات الاستبدال والمبالغ المستردة.</p>
+ </div>
+</section>
+
+<!-- المالية -->
+<section class="page" id="page-finance">
+ <div class="panel">
+  <h3>المالية والأرباح</h3>
+  <div class="notice">
+   هذه قيمة الطلبات المؤكدة والمشحونة والمسلمة، وليست صافي الربح. حساب الربح يحتاج إدخال تكلفة الشراء والإعلانات والمصاريف.
+  </div>
+
+  <div class="grid">
+   <div class="card stat">
+    <div class="stat-label">قيمة الطلبات المؤهلة</div>
+    <strong id="financeRevenue">—</strong>
+    <small>دج</small>
+   </div>
+
+   <div class="card stat">
+    <div class="stat-label">عدد الطلبات المؤهلة</div>
+    <strong id="financeCount">—</strong>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- التحليلات -->
+<section class="page" id="page-analytics">
+ <div class="panel">
+  <div class="panel-head">
+   <h3>التحليلات والتقارير</h3>
+   <button class="btn secondary small" id="refreshAnalytics">تحديث</button>
+  </div>
+
+  <p class="muted">توزيع الطلبات حسب الحالة.</p>
+  <div id="analyticsBars" class="chart"></div>
+  <div id="analyticsLabels" class="muted"></div>
+ </div>
+</section>
+
+<!-- ذكاء التجارة -->
+<section class="page" id="page-intelligence">
+ <div class="panel">
+  <h3>🧠 ذكاء التجارة واتخاذ القرارات</h3>
+
+  <div class="notice">
+   المستشار الذكي سيعتمد على بيانات المتجر الفعلية. لن نعرض أرباحاً أو توصيات تخمينية على أنها حقائق.
+  </div>
+
+  <div class="grid">
+   <div class="card">
+    <div class="stat-label">المنتجات المسجلة</div>
+    <strong id="intelProducts">—</strong>
+   </div>
+
+   <div class="card">
+    <div class="stat-label">الطلبات المسجلة</div>
+    <strong id="intelOrders">—</strong>
+   </div>
+
+   <div class="card">
+    <div class="stat-label">طلبات الانتظار</div>
+    <strong id="intelPending">—</strong>
+   </div>
+
+   <div class="card">
+    <div class="stat-label">المبيعات المؤهلة</div>
+    <strong id="intelRevenue">—</strong>
+   </div>
+  </div>
+
+  <div id="intelAdvice" class="section-placeholder">
+   ستظهر التوصيات بعد استكمال بيانات التكلفة والإعلانات.
+  </div>
+ </div>
+</section>
+
+<!-- الموظفون -->
+<section class="page" id="page-staff">
+ <div class="section-placeholder">
+  <h3>الموظفون والصلاحيات</h3>
+  <p class="muted">قيد التطوير: نظام أدوار وصلاحيات آمن.</p>
+ </div>
+</section>
+
+<!-- البائعون -->
+<section class="page" id="page-marketplace">
+ <div class="section-placeholder">
+  <h3>المتاجر والبائعون</h3>
+  <p class="muted">مرحلة مستقبلية: بنية متعددة البائعين والعمولات والتسويات.</p>
+ </div>
+</section>
+
+<!-- التطبيقات -->
+<section class="page" id="page-apps">
+ <div class="section-placeholder">
+  <h3>التطبيقات وواجهات API</h3>
+  <p class="muted">قيد التطوير: التكاملات الخارجية وواجهات API.</p>
+ </div>
+</section>
+
+<!-- الإعدادات -->
+<section class="page" id="page-settings">
+ <div class="section-placeholder">
+  <h3>الإعدادات والأمان</h3>
+  <p class="muted">تسجيل الدخول عبر Supabase Auth. لا تضع مفاتيح الخدمة السرية داخل هذا الملف.</p>
+ </div>
+</section>
+
+</main>
+</div>
+  
+<script>
+// ======================================
+// ZALMEX ADMIN 2.0 - SUPABASE CONNECTION
+// ======================================
+
+// ضع نفس بيانات Supabase الموجودة في admin.html القديم
+  const SUPABASE_URL = "https://jblehthxfyeseqbzhijy.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_6JRg31NgFFiry4ah_qxBvw_9ffoph9s";
+
+const db = window.supabase.createClient(
+ SUPABASE_URL,
+ SUPABASE_ANON_KEY
+);
+
+const $ = id => document.getElementById(id);
+
+const money = value =>
+ (Number(value) || 0).toLocaleString("fr-FR") + " دج";
+
+const escapeHTML = value =>
+ String(value ?? "").replace(/[&<>"']/g, char => ({
+  "&":"&amp;",
+  "<":"&lt;",
+  ">":"&gt;",
+  '"':"&quot;",
+  "'":"&#39;"
+ }[char]));
+
+const statusNames = {
+ pending:"قيد الانتظار",
+ confirmed:"مؤكد",
+ shipped:"تم الشحن",
+ delivered:"تم التسليم",
+ cancelled:"ملغي",
+ returned:"مرتجع"
+};
+
+const statusClass = status =>
+ ["confirmed","shipped","delivered"].includes(status)
+ ? "green"
+ : ["cancelled","returned"].includes(status)
+ ? "red"
+ : "orange";
+
+let allOrders = [];
+let allProducts = [];
+let categories = [];
+
+// ======================================
+// التنبيهات
+// ======================================
+
+function toast(message){
+ let box = $("zalmexToast");
+
+ if(!box){
+  box = document.createElement("div");
+  box.id = "zalmexToast";
+
+  box.style.cssText =
+   "position:fixed;bottom:20px;left:20px;z-index:9999;" +
+   "background:#20223b;color:white;padding:13px 17px;" +
+   "border-radius:12px;max-width:90%;font-size:13px;" +
+   "box-shadow:0 8px 30px #0003";
+
+  document.body.appendChild(box);
+ }
+
+ box.textContent = message;
+ box.style.display = "block";
+
+ clearTimeout(window.zalmexToastTimer);
+
+ window.zalmexToastTimer = setTimeout(() => {
+  box.style.display = "none";
+ }, 4000);
+}
+
+// ======================================
+// التنقل بين الصفحات
+// ======================================
+
+const pageTitles = {
+ dashboard:["الرئيسية","نظرة عامة على نشاط ZALMEX"],
+ orders:["الطلبات","متابعة الطلبات وحالاتها"],
+ products:["المنتجات","إدارة المنتجات والصور والمخزون"],
+ categories:["التصنيفات والعلامات","تنظيم المنتجات"],
+ warehouse:["المخزون والمستودعات","متابعة أرصدة المنتجات"],
+ purchases:["المشتريات والموردون","إدارة التوريد"],
+ customers:["العملاء","سجل العملاء والطلبات"],
+ discounts:["الخصومات والكوبونات","العروض الترويجية"],
+ marketing:["التسويق والإعلانات","قنوات التسويق"],
+ shipping:["الشحن والتوصيل","إدارة شركات التوصيل"],
+ returns:["المرتجعات والاستبدال","إدارة المرتجعات"],
+ finance:["المالية والأرباح","مؤشرات الإيرادات"],
+ analytics:["التحليلات والتقارير","أداء المتجر"],
+ intelligence:["ذكاء التجارة والقرارات","مؤشرات اتخاذ القرار"],
+ staff:["الموظفون والصلاحيات","إدارة فريق العمل"],
+ marketplace:["المتاجر والبائعون","منصة متعددة البائعين"],
+ apps:["التطبيقات وواجهات API","التكاملات"],
+ settings:["الإعدادات والأمان","إعدادات المنصة"]
+};
+
+function showPage(name){
+
+ document.querySelectorAll(".page").forEach(page=>{
+  page.classList.remove("active");
+ });
+
+ const target = $("page-" + name);
+
+ if(target) target.classList.add("active");
+
+ document.querySelectorAll(".nav button").forEach(button=>{
+  button.classList.toggle(
+   "active",
+   button.dataset.page === name
+  );
+ });
+
+ $("pageTitle").textContent =
+  pageTitles[name]?.[0] || "ZALMEX";
+
+ $("pageSubtitle").textContent =
+  pageTitles[name]?.[1] || "";
+
+ $("sidebar").classList.remove("open");
+
+ if(name === "dashboard") loadDashboard();
+ if(name === "orders") loadOrders();
+ if(name === "products") loadProducts();
+ if(name === "categories") loadCategories();
+ if(name === "customers") loadCustomers();
+ if(name === "warehouse") renderWarehouse();
+ if(name === "analytics") renderAnalytics();
+}
+
+document.querySelectorAll("[data-page]").forEach(button=>{
+ button.addEventListener("click",()=>{
+  showPage(button.dataset.page);
+ });
+});
+
+document.querySelectorAll("[data-go]").forEach(button=>{
+ button.addEventListener("click",()=>{
+  showPage(button.dataset.go);
+ });
+});
+
+$("menuBtn").addEventListener("click",()=>{
+ $("sidebar").classList.toggle("open");
+});
+
+// ======================================
+// تسجيل الدخول
+// ======================================
+
+function showApp(session){
+
+ $("loginScreen").style.display = "none";
+ $("app").style.display = "block";
+
+ $("userEmail").textContent =
+  session.user.email || "";
+
+ loadEverything();
+}
+
+function showLogin(){
+
+ $("app").style.display = "none";
+ $("loginScreen").style.display = "grid";
+}
+
+async function initialize(){
+
+ try{
+
+  const {data,error} =
+   await db.auth.getSession();
+
+  if(error) throw error;
+
+  if(data.session){
+   showApp(data.session);
+  }else{
+   showLogin();
+  }
+
+  db.auth.onAuthStateChange((_event,session)=>{
+
+   if(session){
+    showApp(session);
+   }else{
+    showLogin();
+   }
+
+  });
+
+ }catch(error){
+
+  console.error(error);
+
+  $("loginError").textContent =
+   "تعذر الاتصال: " + error.message;
+
+ }
+
+}
+
+$("loginForm").addEventListener("submit",async event=>{
+
+ event.preventDefault();
+
+ $("loginError").textContent = "";
+
+ const email = $("loginEmail").value.trim();
+ const password = $("loginPassword").value;
+
+ const {error} =
+  await db.auth.signInWithPassword({
+   email,
+   password
+  });
+
+ if(error){
+  $("loginError").textContent = error.message;
+ }
+
+});
+
+$("logoutBtn").addEventListener("click",async()=>{
+
+ await db.auth.signOut();
+
+});
+
+// ======================================
+// تحميل البيانات
+// ======================================
+
+async function getOrders(){
+
+ const {data,error} = await db
+  .from("orders")
+  .select("*")
+  .order("created_at",{ascending:false});
+
+ if(error) throw error;
+
+ return data || [];
+
+}
+
+async function loadEverything(){
+
+ await Promise.allSettled([
+  loadDashboard(),
+  loadOrders(),
+  loadProducts(),
+  loadCategories()
+ ]);
+
+}
+
+// ======================================
+// الرئيسية
+// ======================================
+
+async function loadDashboard(){
+
+ try{
+
+  const [
+   {count:productCount,error:productError},
+   orders
+  ] = await Promise.all([
+
+   db.from("products")
+    .select("*",{count:"exact",head:true}),
+
+   getOrders()
+
+  ]);
+
+  if(productError) throw productError;
+
+  allOrders = orders;
+
+  const pending = orders.filter(
+   order => order.status === "pending"
+  ).length;
+
+  const validOrders = orders.filter(
+   order => ["confirmed","shipped","delivered"]
+    .includes(order.status)
+  );
+
+  const revenue = validOrders.reduce(
+   (sum,order)=>sum + Number(order.total || 0),
+   0
+  );
+
+  $("statProducts").textContent =
+   productCount ?? 0;
+
+  $("statOrders").textContent =
+   orders.length;
+
+  $("statPending").textContent =
+   pending;
+
+  $("statRevenue").textContent =
+   money(revenue);
+
+  $("financeRevenue").textContent =
+   money(revenue);
+
+  $("financeCount").textContent =
+   validOrders.length;
+
+  $("intelProducts").textContent =
+   productCount ?? 0;
+
+  $("intelOrders").textContent =
+   orders.length;
+
+  $("intelPending").textContent =
+   pending;
+
+  $("intelRevenue").textContent =
+   money(revenue);
+
+  $("statusSummary").innerHTML =
+   Object.keys(statusNames).map(status=>{
+
+    const count = orders.filter(
+     order=>order.status === status
+    ).length;
+
+    return `
+     <div class="card">
+      <small class="muted">${statusNames[status]}</small>
+      <strong style="display:block;font-size:22px;margin-top:6px">
+       ${count}
+      </strong>
+     </div>
+    `;
+
+   }).join("");
+
+  $("recentOrders").innerHTML =
+   orders.slice(0,5).map(order=>`
+
+    <tr>
+     <td>${escapeHTML(order.order_number || order.id)}</td>
+     <td>${escapeHTML(order.customer_name)}</td>
+     <td>${escapeHTML(order.phone)}</td>
+     <td>${money(order.total)}</td>
+     <td>
+      <span class="badge ${statusClass(order.status)}">
+       ${statusNames[order.status] || escapeHTML(order.status)}
+      </span>
+     </td>
+     <td>
+      ${order.created_at
+       ? new Date(order.created_at).toLocaleDateString("ar-DZ")
+       : "—"}
+     </td>
+    </tr>
+
+   `).join("") ||
+   '<tr><td colspan="6" class="empty">لا توجد طلبات بعد</td></tr>';
+
+ }catch(error){
+
+  console.error(error);
+
+  toast("تعذر تحميل الرئيسية: " + error.message);
+
+ }
+
+}
+
+$("refreshDashboard").addEventListener(
+ "click",
+ loadDashboard
+);
+
+// ======================================
+// الطلبات
+// ======================================
+
+async function loadOrders(){
+
+ try{
+
+  allOrders = await getOrders();
+
+  renderOrders();
+
+ }catch(error){
+
+  toast("خطأ تحميل الطلبات: " + error.message);
+
+ }
+
+}
+
+function renderOrders(){
+
+ const query =
+  $("orderSearch").value.trim().toLowerCase();
+
+ const filter =
+  $("orderFilter").value;
+
+ const rows = allOrders.filter(order=>{
+
+  const matchesStatus =
+   !filter || order.status === filter;
+
+  const searchable = [
+   order.order_number,
+   order.customer_name,
+   order.phone
+  ].some(value=>
+   String(value || "").toLowerCase().includes(query)
+  );
+
+  return matchesStatus && searchable;
+
+ });
+
+ $("ordersTable").innerHTML =
+  rows.map(order=>`
+
+   <tr>
+    <td>${escapeHTML(order.order_number || order.id)}</td>
+    <td>${escapeHTML(order.customer_name)}</td>
+    <td>${escapeHTML(order.phone)}</td>
+    <td>${escapeHTML(order.wilaya || "—")}</td>
+    <td>${money(order.total)}</td>
+    <td>
+     <span class="badge ${statusClass(order.status)}">
+      ${statusNames[order.status] || escapeHTML(order.status)}
+     </span>
+    </td>
+    <td>
+     ${order.created_at
+      ? new Date(order.created_at).toLocaleDateString("ar-DZ")
+      : "—"}
+    </td>
+    <td>
+     ${
+      order.status === "pending"
+      ? `
+       <button class="btn success small"
+        onclick="confirmOrder(${Number(order.id)})">
+        تأكيد وخصم المخزون
+       </button>
+
+       <button class="btn danger small"
+        onclick="cancelOrder(${Number(order.id)})">
+        إلغاء
+       </button>
+      `
+      : "—"
+     }
+    </td>
+   </tr>
+
+  `).join("") ||
+  '<tr><td colspan="8" class="empty">لا توجد نتائج</td></tr>';
+
+}
+
+$("orderSearch").addEventListener(
+ "input",
+ renderOrders
+);
+
+$("orderFilter").addEventListener(
+ "change",
+ renderOrders
+);
+
+$("refreshOrders").addEventListener(
+ "click",
+ loadOrders
+);
+
+// تأكيد الطلب عن طريق دالة Supabase الموجودة
+
+window.confirmOrder = async function(id){
+
+ if(!confirm("هل تريد تأكيد الطلب وخصم المخزون؟")){
+  return;
+ }
+
+ const {error} = await db.rpc(
+  "confirm_zalmex_order",
+  {p_order_id:id}
+ );
+
+ if(error){
+  toast("فشل التأكيد: " + error.message);
+  return;
+ }
+
+ toast("تم تأكيد الطلب.");
+
+ await Promise.all([
+  loadOrders(),
+  loadDashboard()
+ ]);
+
+};
+
+// إلغاء الطلب المعلق
+
+window.cancelOrder = async function(id){
+
+ if(!confirm("هل تريد إلغاء هذا الطلب؟")){
+  return;
+ }
+
+ const {error} = await db
+  .from("orders")
+  .update({status:"cancelled"})
+  .eq("id",id)
+  .eq("status","pending");
+
+ if(error){
+  toast("تعذر الإلغاء: " + error.message);
+  return;
+ }
+
+ toast("تم إلغاء الطلب.");
+
+ await Promise.all([
+  loadOrders(),
+  loadDashboard()
+ ]);
+
+};
+
+// ======================================
+// التصنيفات
+// ======================================
+
+async function loadCategories(){
+
+ try{
+
+  const {data,error} = await db
+   .from("categories")
+   .select("*")
+   .order("id");
+
+  if(error) throw error;
+
+  categories = data || [];
+
+  $("productCategory").innerHTML =
+   '<option value="">بدون تصنيف</option>' +
+   categories.map(category=>`
+
+    <option value="${escapeHTML(category.id)}">
+     ${escapeHTML(
+      category.name_ar ||
+      category.name_fr ||
+      category.name ||
+      "تصنيف"
+     )}
+    </option>
+
+   `).join("");
+
+  $("categoriesList").innerHTML =
+   categories.map(category=>`
+
+    <div class="card">
+     <b>
+      ${escapeHTML(
+       category.name_ar ||
+       category.name_fr ||
+       category.name ||
+       "تصنيف"
+      )}
+     </b>
+    </div>
+
+   `).join("") ||
+   '<p class="empty">لا توجد تصنيفات مسجلة</p>';
+
+ }catch(error){
+
+  toast("تعذر تحميل التصنيفات: " + error.message);
+
+ }
+
+}
+
+// ======================================
+// المنتجات
+// ======================================
+
+async function loadProducts(){
+
+ try{
+
+  const {data,error} = await db
+   .from("products")
+   .select("*")
+   .order("created_at",{ascending:false});
+
+  if(error) throw error;
+
+  allProducts = data || [];
+
+  renderProducts();
+  renderWarehouse();
+
+ }catch(error){
+
+  toast("خطأ تحميل المنتجات: " + error.message);
+
+ }
+
+}
+
+function renderProducts(){
+
+ const query =
+  $("productSearch").value.trim().toLowerCase();
+
+ const rows = allProducts.filter(product=>
+  String(product.name_ar || "").toLowerCase().includes(query) ||
+  String(product.name_fr || "").toLowerCase().includes(query)
+ );
+
+ $("productsTable").innerHTML =
+  rows.map(product=>`
+
+   <tr>
+    <td>
+     ${
+      product.image_url
+      ? `<img class="product-thumb"
+          src="${escapeHTML(product.image_url)}" alt="">`
+      : "—"
+     }
+    </td>
+
+    <td>${escapeHTML(product.name_ar)}</td>
+
+    <td>${money(product.price)}</td>
+
+    <td>${Number(product.stock || 0)}</td>
+
+    <td>
+     <span class="badge ${product.is_active?"green":"red"}">
+      ${product.is_active?"نشط":"مخفي"}
+     </span>
+    </td>
+
+    <td>
+     <button class="btn secondary small"
+      onclick="editProduct(${Number(product.id)})">
+      تعديل
+     </button>
+
+     <button class="btn ${product.is_active?"danger":"success"} small"
+      onclick="toggleProduct(${Number(product.id)},${!product.is_active})">
+      ${product.is_active?"إخفاء":"تفعيل"}
+     </button>
+    </td>
+   </tr>
+
+  `).join("") ||
+  '<tr><td colspan="6" class="empty">لا توجد منتجات</td></tr>';
+
+}
+
+$("productSearch").addEventListener(
+ "input",
+ renderProducts
+);
+
+$("refreshProducts").addEventListener(
+ "click",
+ loadProducts
+);
+
+// تفريغ نموذج المنتج
+
+function resetProductForm(){
+
+ $("productForm").reset();
+
+ $("productId").value = "";
+ $("productImage").value = "";
+
+ $("productActive").checked = true;
+
+ $("productFormTitle").textContent = "إضافة منتج";
+ $("saveProductBtn").textContent = "حفظ المنتج";
+ $("productMessage").textContent = "";
+
+}
+
+$("resetProduct").addEventListener(
+ "click",
+ resetProductForm
+);
+
+// تعديل منتج
+
+window.editProduct = function(id){
+
+ const product = allProducts.find(
+  item=>Number(item.id) === Number(id)
+ );
+
+ if(!product) return;
+
+ showPage("products");
+
+ $("productId").value = product.id;
+ $("productName").value = product.name_ar || "";
+ $("productNameFr").value = product.name_fr || "";
+ $("productPrice").value = product.price ?? "";
+ $("productStock").value = product.stock ?? 0;
+ $("productCategory").value = product.category_id || "";
+ $("productDescription").value = product.description || "";
+ $("productImage").value = product.image_url || "";
+ $("productActive").checked = !!product.is_active;
+
+ $("productFormTitle").textContent = "تعديل المنتج";
+ $("saveProductBtn").textContent = "حفظ التعديلات";
+
+ window.scrollTo({top:0,behavior:"smooth"});
+
+};
+
+// تفعيل أو إخفاء منتج
+
+window.toggleProduct = async function(id,active){
+
+ const {error} = await db
+  .from("products")
+  .update({is_active:active})
+  .eq("id",id);
+
+ if(error){
+  toast(error.message);
+  return;
+ }
+
+ toast("تم تحديث حالة المنتج.");
+
+ await loadProducts();
+
+};
+
+// حفظ منتج جديد أو تعديله
+
+$("productForm").addEventListener("submit",async event=>{
+
+ event.preventDefault();
+
+ const button = $("saveProductBtn");
+
+ button.disabled = true;
+ button.textContent = "جارٍ الحفظ...";
+
+ try{
+
+  let imageUrl = $("productImage").value || null;
+
+  const file = $("productFile").files?.[0];
+
+  // رفع الصورة إلى Supabase Storage
+
+  if(file){
+
+   const safeName = file.name.replace(
+    /[^a-zA-Z0-9._-]/g,
+    "_"
+   );
+
+   const filePath = Date.now() + "-" + safeName;
+
+   const {error:uploadError} = await db
+    .storage
+    .from("product-images")
+    .upload(filePath,file,{
+     upsert:true,
+     contentType:file.type
+    });
+
+   if(uploadError) throw uploadError;
+
+   const {data:publicData} = db
+    .storage
+    .from("product-images")
+    .getPublicUrl(filePath);
+
+   imageUrl = publicData.publicUrl;
+
+  }
+
+  const payload = {
+
+   name_ar:$("productName").value.trim(),
+
+   name_fr:$("productNameFr").value.trim() || null,
+
+   description:$("productDescription").value.trim() || null,
+
+   price:Number($("productPrice").value),
+
+   stock:Number($("productStock").value),
+
+   category_id:$("productCategory").value || null,
+
+   image_url:imageUrl,
+
+   is_active:$("productActive").checked
+
+  };
+
+  const id = $("productId").value;
+
+  const result = id
+   ? await db.from("products").update(payload).eq("id",id)
+   : await db.from("products").insert(payload);
+
+  if(result.error) throw result.error;
+
+  toast(id ? "تم تحديث المنتج" : "تمت إضافة المنتج");
+
+  resetProductForm();
+
+  await loadProducts();
+  await loadDashboard();
+
+ }catch(error){
+
+  $("productMessage").textContent =
+   "خطأ: " + error.message;
+
+  toast("لم يتم الحفظ: " + error.message);
+
+ }finally{
+
+  button.disabled = false;
+
+  button.textContent =
+   $("productId").value
+   ? "حفظ التعديلات"
+   : "حفظ المنتج";
+
+ }
+
+});
+
+// ======================================
+// المخزون
+// ======================================
+
+function renderWarehouse(){
+
+ $("warehouseList").innerHTML =
+  allProducts.map(product=>`
+
+   <div style="display:flex;justify-content:space-between;padding:12px;border-bottom:1px solid var(--border)">
+    <span>${escapeHTML(product.name_ar)}</span>
+    <b>${Number(product.stock || 0)} قطعة</b>
+   </div>
+
+  `).join("") ||
+  '<p class="empty">لا توجد منتجات</p>';
+
+}
+
+// ======================================
+// العملاء
+// ======================================
+
+async function loadCustomers(){
+
+ try{
+
+  const orders = await getOrders();
+
+  const customers = {};
+
+  orders.forEach(order=>{
+
+   const key = order.phone || order.customer_name || "unknown";
+
+   if(!customers[key]){
+
+    customers[key] = {
+     name:order.customer_name,
+     phone:order.phone,
+     count:0,
+     total:0
+    };
+
+   }
+
+   customers[key].count++;
+
+   customers[key].total += Number(order.total || 0);
+
+  });
+
+  $("customersTable").innerHTML =
+   Object.values(customers)
+    .sort((a,b)=>b.count-a.count)
+    .map(customer=>`
+
+     <tr>
+      <td>${escapeHTML(customer.name)}</td>
+      <td>${escapeHTML(customer.phone)}</td>
+      <td>${customer.count}</td>
+      <td>${money(customer.total)}</td>
+     </tr>
+
+    `).join("") ||
+    '<tr><td colspan="4" class="empty">لا يوجد عملاء</td></tr>';
+
+ }catch(error){
+
+  toast(error.message);
+
+ }
+
+}
+
+$("refreshCustomers").addEventListener(
+ "click",
+ loadCustomers
+);
+
+// ======================================
+// التحليلات
+// ======================================
+
+function renderAnalytics(){
+
+ const keys = Object.keys(statusNames);
+
+ const counts = keys.map(status=>
+  allOrders.filter(order=>order.status===status).length
+ );
+
+ const max = Math.max(1,...counts);
+
+ $("analyticsBars").innerHTML =
+  counts.map(count=>`
+
+   <div class="chart-bar"
+    style="height:${Math.max(5,count/max*100)}%">
+    <span>${count}</span>
+   </div>
+
+  `).join("");
+
+ $("analyticsLabels").style.display = "flex";
+ $("analyticsLabels").style.justifyContent = "space-around";
+ $("analyticsLabels").style.gap = "5px";
+ $("analyticsLabels").style.fontSize = "10px";
+ $("analyticsLabels").style.marginTop = "28px";
+
+ $("analyticsLabels").innerHTML =
+  keys.map(status=>`
+
+   <span>${statusNames[status]}</span>
+
+  `).join("");
+
+}
+
+$("refreshAnalytics").addEventListener(
+ "click",
+ async()=>{
+  await loadDashboard();
+  renderAnalytics();
+ }
+);
+
+// ======================================
+// بدء النظام
+// ======================================
+
+initialize();
+
+console.log("ZALMEX Admin 2.0 initialized");
+
+</script>
+</body>
+</html>
